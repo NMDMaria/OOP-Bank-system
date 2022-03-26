@@ -1,4 +1,4 @@
-package com.company.Classes;
+package com.company.Models;
 
 public class Treatment {
     protected String drug;

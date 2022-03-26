@@ -1,4 +1,4 @@
-package com.company.Classes;
+package com.company.Models;
 
 import java.util.Date;
 
