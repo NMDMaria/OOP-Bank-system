@@ -1,60 +1,64 @@
 package com.company.Models;
 
-import java.time.LocalDateTime;
+import java.time.*;
 
 public class Appointment {
-    protected Healthcare_employee doctor;
-    protected Pacient pacient;
     protected LocalDateTime date;
     protected Status status;
     protected String specialization;
     protected Medical_procedure medical_procedure;
 
-    public Appointment(Healthcare_employee doctor, Pacient pacient, LocalDateTime date, Status status, String specialization) {
-        this.doctor = doctor;
-        this.pacient = pacient;
+    public Appointment(LocalDate date, Integer hour, Integer minute, Status status, String specialization, Medical_procedure medical_procedure) {
+        this.date = LocalDateTime.of(date, LocalTime.of(hour, minute));
+        this.status = status;
+        this.specialization = specialization;
+        this.medical_procedure = medical_procedure;
+    }
+
+    public Appointment(LocalDateTime date, Status status, String specialization, Medical_procedure medical_procedure) {
         this.date = date;
         this.status = status;
         this.specialization = specialization;
+        this.medical_procedure = medical_procedure;
     }
 
-    public Healthcare_employee getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Healthcare_employee doctor) {
-        this.doctor = doctor;
-    }
-
-    public Pacient getPacient() {
-        return pacient;
-    }
-
-    public void setPacient(Pacient pacient) {
-        this.pacient = pacient;
+    public Appointment(Integer day, Integer month, Integer year,Integer hour, Integer minute, Status status, String specialization, Medical_procedure medical_procedure) {
+        this.date = LocalDateTime.of(year, month, day, hour, minute);
+        this.status = status;
+        this.specialization = specialization;
+        this.medical_procedure = medical_procedure;
     }
 
     public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
     public Status getStatus() {
         return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getSpecialization() {
         return specialization;
     }
 
+    public Medical_procedure getMedical_procedure() {
+        return medical_procedure;
+    }
+
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public void setSpecialization(String specialization) {
         this.specialization = specialization;
+    }
+
+    public void setMedical_procedure(Medical_procedure medical_procedure) {
+        this.medical_procedure = medical_procedure;
     }
 }
