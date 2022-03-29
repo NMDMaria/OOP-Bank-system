@@ -1,6 +1,8 @@
 package com.company.Models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Pacient extends User{
     private String first_name;
@@ -9,8 +11,8 @@ public class Pacient extends User{
     private Gender gender;
 
     // Important for functionality
-    protected Appointment[] appointments; // TODO: sort by date, everything regarding it
-    protected Affection[] affections; // TODO: sort by date, everything regarding it
+    protected ArrayList<Appointment> appointments = new ArrayList<>(); // TODO: sort by date, everything regarding it
+    protected ArrayList<Affection> affections = new ArrayList<>(); // TODO: sort by date, everything regarding it
 
     public Pacient(String username, String email, String password, String first_name, String last_name, Date dob, Gender gender) {
         super(username, email, password);
@@ -36,14 +38,6 @@ public class Pacient extends User{
         return gender;
     }
 
-    public Appointment[] getAppointments() {
-        return appointments;
-    }
-
-    public Affection[] getAffections() {
-        return affections;
-    }
-
     public void setFirst_name(String first_name) {
         this.first_name = first_name;
     }
@@ -60,11 +54,19 @@ public class Pacient extends User{
         this.gender = gender;
     }
 
-    public void setAppointments(Appointment[] appointments) {
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(ArrayList<Appointment> appointments) {
         this.appointments = appointments;
     }
 
-    public void setAffections(Affection[] affections) {
+    public ArrayList<Affection> getAffections() {
+        return affections;
+    }
+
+    public void setAffections(ArrayList<Affection> affections) {
         this.affections = affections;
     }
 }

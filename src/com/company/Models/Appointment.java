@@ -1,6 +1,7 @@
 package com.company.Models;
 
 import java.time.*;
+import java.util.Objects;
 
 public class Appointment {
     protected LocalDateTime date;
@@ -60,5 +61,28 @@ public class Appointment {
 
     public void setMedical_procedure(Medical_procedure medical_procedure) {
         this.medical_procedure = medical_procedure;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Appointment that = (Appointment) o;
+        return Objects.equals(date, that.date) && status == that.status && Objects.equals(specialization, that.specialization) && Objects.equals(medical_procedure, that.medical_procedure);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, status, specialization, medical_procedure);
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "date=" + date +
+                ", status=" + status +
+                ", specialization='" + specialization + '\'' +
+                ", medical_procedure=" + medical_procedure +
+                '}';
     }
 }
