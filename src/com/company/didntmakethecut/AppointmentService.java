@@ -1,6 +1,6 @@
 package com.company.didntmakethecut;
 
-import com.company.Medicine.*;
+import com.company.medicine.*;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +21,7 @@ public class AppointmentService {
 
     public Appointment makeAppointmentSurgery(LocalDateTime date, String specialization, String type, Severity risk)
     {
-        return new Appointment(date, Status.CANCELLED, specialization, new Medical_procedure(date.getHour(), date.getMinute()));
+        return new Appointment(date, Status.CANCELLED, specialization, new MedicalProcedure(date.getHour(), date.getMinute()));
     }
 
     public void cancelAppointment()

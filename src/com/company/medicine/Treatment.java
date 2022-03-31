@@ -1,13 +1,13 @@
-package com.company.Medicine;
+package com.company.medicine;
 
 public class Treatment {
     protected String drug;
-    protected Integer number_days;
+    protected Integer numberOfDays;
     protected Float units; // units per day of treatment
 
     public Treatment(String drug , Integer number_days, Float units) {
         this.drug = drug;
-        this.number_days = number_days;
+        this.numberOfDays = number_days;
         this.units = units;
     }
 
@@ -19,12 +19,12 @@ public class Treatment {
         this.drug = drug;
     }
 
-    public Integer getNumber_days() {
-        return number_days;
+    public Integer getNumberOfDays() {
+        return numberOfDays;
     }
 
-    public void setNumber_days(Integer number_days) {
-        this.number_days = number_days;
+    public void setNumberOfDays(Integer numberOfDays) {
+        this.numberOfDays = numberOfDays;
     }
 
     public Float getUnits() {
@@ -37,10 +37,6 @@ public class Treatment {
 
     @Override
     public String toString() {
-        return "Treatment{" +
-                "drug='" + drug + '\'' +
-                ", number_days=" + number_days +
-                ", units=" + units +
-                '}';
+        return "Treatment with " +  drug + " for " + numberOfDays + " days with " + units + " units per day.";
     }
 }

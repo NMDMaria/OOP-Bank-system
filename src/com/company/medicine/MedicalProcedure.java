@@ -1,17 +1,17 @@
-package com.company.Medicine;
+package com.company.medicine;
 
 import java.time.*;
 
-public class Medical_procedure{
+public class MedicalProcedure {
     protected LocalTime start_time;
     protected LocalTime duration;
 
-    public Medical_procedure(LocalTime start_time) {
+    public MedicalProcedure(LocalTime start_time) {
         this.start_time = start_time;
-        this.duration = LocalTime.of(0, 0); // wasnt made
+        this.duration = LocalTime.of(0, 0); // wasn't made
     }
 
-    public Medical_procedure(Integer start_hour, Integer start_minute) {
+    public MedicalProcedure(Integer start_hour, Integer start_minute) {
         this.start_time = LocalTime.of(start_hour, start_minute);
         this.duration = LocalTime.of(0, 0);
     }
@@ -24,11 +24,16 @@ public class Medical_procedure{
         return duration;
     }
 
-    public void setStart_time(LocalTime start_time) {
+    public void setStartTime(LocalTime start_time) {
         this.start_time = start_time;
     }
 
     public void setDuration(LocalTime duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString() {
+        return "Medical procedure with start at " + start_time + " and duration " + duration;
     }
 }

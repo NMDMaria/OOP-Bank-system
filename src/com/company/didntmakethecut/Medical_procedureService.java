@@ -1,7 +1,7 @@
 package com.company.didntmakethecut;
 
-import com.company.Medicine.Doctor;
-import com.company.Medicine.Patient;
+import com.company.medicine.Doctor;
+import com.company.medicine.Patient;
 
 public class Medical_procedureService {
     Doctor doctor;

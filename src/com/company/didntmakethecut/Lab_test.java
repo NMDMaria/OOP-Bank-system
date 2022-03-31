@@ -1,11 +1,11 @@
 package com.company.didntmakethecut;
 
-import com.company.Medicine.Doctor;
-import com.company.Medicine.Medical_procedure;
+import com.company.medicine.Doctor;
+import com.company.medicine.MedicalProcedure;
 
 import java.time.LocalTime;
 
-public class Lab_test extends Medical_procedure {
+public class Lab_test extends MedicalProcedure {
     private Test[] tests;
     private Boolean finished; // analized??
     private Doctor validated_by;

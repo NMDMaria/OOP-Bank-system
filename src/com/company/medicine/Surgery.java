@@ -1,8 +1,8 @@
-package com.company.Medicine;
+package com.company.medicine;
 
 import java.time.LocalTime;
 
-public class Surgery extends Medical_procedure{
+public class Surgery extends MedicalProcedure {
     protected String type;
     protected Severity risk;
     protected String complications;
@@ -45,5 +45,12 @@ public class Surgery extends Medical_procedure{
 
     public void setComplications(String complications) {
         this.complications = complications;
+    }
+
+    @Override
+    public String toString() {
+        return "\t\tSurgery\n" +
+                "type  "+ type +
+                "\nrisk " + risk;
     }
 }

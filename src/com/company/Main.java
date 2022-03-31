@@ -1,12 +1,15 @@
 package com.company;
 
-import com.company.Administrative.UserService;
-import com.company.Medicine.Doctor;
-import com.company.Medicine.DoctorService;
-import com.company.Medicine.Patient;
-import com.company.Medicine.PacientService;
+import com.company.administrative.User;
+import com.company.administrative.UserService;
+import com.company.medicine.Appointment;
+import com.company.medicine.Checkup;
+import com.company.medicine.Status;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Scanner;
 
 public class Main {
 
@@ -29,7 +32,7 @@ public class Main {
         ds.displayProcedures();
         System.out.println(d.getAppointments().get(0));
         */
-
+        /*
         UserService u = UserService.getInstance();
         System.out.println("Creating an patient account");
         Patient p = u.readPacient();
@@ -60,5 +63,15 @@ public class Main {
         System.out.println("----------------------------");
         ds.displayProcedures();
 
+        Scanner sc = new Scanner(System.in);
+        UserService u = UserService.getInstance();
+        u.readDoctor(sc);
+
+        System.out.println(u.getUsers().get(0) instanceof Patient);
+         */
+
+        UserService u = UserService.getInstance();
+        Scanner sc = new Scanner(System.in);
+        u.mainMenu(sc);
     }
 }

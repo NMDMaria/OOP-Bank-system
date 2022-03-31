@@ -1,6 +1,6 @@
 package com.company.didntmakethecut;
 
-import com.company.Medicine.Affection;
+import com.company.medicine.Affection;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -10,16 +10,16 @@ public class AffectionService{
 
     public void markCured(LocalDate end_date)
     {
-        if (end_date.isAfter(this.affection.getStart_date())) {
+        if (end_date.isAfter(this.affection.getStartDate())) {
             this.affection.setCured(true);
-            this.affection.setEnd_date(end_date);
+            this.affection.setEndDate(end_date);
         }
     }
 
     public long duration()
     {
-        if (this.affection.getEnd_date() == null)
+        if (this.affection.getEndDate() == null)
             return Long.MAX_VALUE;
-        return this.affection.getStart_date().until(this.affection.getEnd_date(), ChronoUnit.DAYS);
+        return this.affection.getStartDate().until(this.affection.getEndDate(), ChronoUnit.DAYS);
     }
 }

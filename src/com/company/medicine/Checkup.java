@@ -1,11 +1,12 @@
-package com.company.Medicine;
+package com.company.medicine;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Checkup extends Medical_procedure{
+public class Checkup extends MedicalProcedure {
     protected Affection diagnosis;
-    protected ArrayList<Treatment> treatments = new ArrayList<>();
+    protected List<Treatment> treatments = new ArrayList<>();
     protected String motive;
     protected String observations;
 
@@ -35,12 +36,12 @@ public class Checkup extends Medical_procedure{
         this.diagnosis = diagnosis;
     }
 
-    public ArrayList<Treatment> getTreatments() {
-        return treatments;
+    public List<Treatment> getTreatments() {
+        return new ArrayList<>(treatments);
     }
 
-    public void setTreatments(ArrayList<Treatment> treatments) {
-        this.treatments = treatments;
+    public void setTreatments(List<Treatment> treatments) {
+        this.treatments.addAll(treatments);
     }
 
     public void setMotive(String motive) {
@@ -53,11 +54,20 @@ public class Checkup extends Medical_procedure{
 
     @Override
     public String toString() {
-        return "Checkup{" +
-                "diagnosis=" + diagnosis +
-                ", treatments=" + treatments +
-                ", motive='" + motive + '\'' +
-                ", observations='" + observations + '\'' +
-                '}';
+        String result = "\t\tCheckup\n";
+        if (diagnosis != null) {
+            result += "Diagnosis was: " + diagnosis;
+            if (!treatments.isEmpty())
+            {
+                result += "\nTreatment list: ";
+                for (int i = 1; i <= treatments.size(); i++) {
+                    result = result + "\n" + i + treatments.get(i - 1);
+                }
+            }
+            else result = result + "\nWith no treatments.";
+        }
+        result += "\nMotive: " + motive;
+        result += "\nObservations: " + observations;
+        return result;
     }
 }

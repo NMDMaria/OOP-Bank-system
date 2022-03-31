@@ -1,4 +1,4 @@
-package com.company.Medicine;
+package com.company.medicine;
 
 public enum Severity {
     LOW,
