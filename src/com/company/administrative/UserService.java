@@ -381,6 +381,7 @@ public class UserService {
         this.users.remove(user);
     }
 
+    /*
     public void mainMenu(Scanner scanner)
     {
         System.out.println("🏥 Welcome to Sirona centre 🏥");
@@ -460,4 +461,5 @@ public class UserService {
             }
         }while (!option.equals("0"));
     }
+     */
 }
