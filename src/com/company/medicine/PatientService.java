@@ -2,6 +2,7 @@ package com.company.medicine;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -113,7 +114,7 @@ public class PatientService {
         System.out.println("----------------------------");
         List<Appointment> appointments = patient.getAppointments();
         DateComparator dateComparator = new DateComparator();
-        appointments.sort(dateComparator);
+        Collections.sort(appointments, dateComparator);
         for (Appointment appointment:appointments) {
             if (appointment.date.getYear() == year &&
                 appointment.date.getMonthValue() == month &&
@@ -130,7 +131,7 @@ public class PatientService {
         System.out.printf("Appointments for %d-%d\n", month, year);
         List<Appointment> appointments = patient.getAppointments();
         DateComparator dateComparator = new DateComparator();
-        appointments.sort(dateComparator);
+        Collections.sort(appointments, dateComparator);
         for (Appointment appointment:appointments) {
             if (appointment.date.getYear() == year &&
                     appointment.date.getMonthValue() == month){
@@ -147,7 +148,7 @@ public class PatientService {
         System.out.printf("Appointments for %d\n", year);
         List<Appointment> appointments = patient.getAppointments();
         DateComparator dateComparator = new DateComparator();
-        appointments.sort(dateComparator);
+        Collections.sort(appointments, dateComparator);
         for (Appointment appointment:appointments) {
             if (appointment.date.getYear() == year){
                 System.out.println(appointment);
