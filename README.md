@@ -1,4 +1,4 @@
-# PAOproiect
+# Programare Avansată pe Obiecte - Proiect
 ### Descriere
 Acest proiect urmează aplicația unui centru medical, cu utilizatori (pacienți și doctori) și monitorizarea programărilor și a procedurilor medical efectuate. 
 ### Obiecte
@@ -31,3 +31,4 @@ bonus enum: Gender, Status, Severity
 12. *Pacient* - crează programare
 13. *Pacient* - listează programări în funcție dată (completă, lună + an, doar an)
 14. *Pacient* - mută programare
+15. *Pacient* - anulează programare
