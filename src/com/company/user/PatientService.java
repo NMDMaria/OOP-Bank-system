@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public interface PatientService {
-    static void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments) {
+public class PatientService {
+    public static void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments) {
         System.out.println("Welcome " + patient.getLastName() + " " + patient.getFirstName());
 
         String answer;
@@ -152,7 +152,7 @@ public interface PatientService {
         }while(!answer.equals("0"));
     }
 
-    static Patient readPatient(String username, String email, String password, Scanner scanner){
+    public static Patient readPatient(String username, String email, String password, Scanner scanner){
         try {
             System.out.print("First name: ");
             String firstName = scanner.nextLine();

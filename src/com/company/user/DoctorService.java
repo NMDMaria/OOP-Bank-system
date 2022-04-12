@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public interface DoctorService {
-    static Doctor readDoctor(String username, String email, String password, Scanner scanner)
+public class DoctorService {
+    public static Doctor readDoctor(String username, String email, String password, Scanner scanner)
     {
         try {
             System.out.print("First name: ");
@@ -60,7 +60,7 @@ public interface DoctorService {
         }
     }
 
-    static void doctorMenu(Doctor doctor, Scanner scanner, List<Appointment> appointments)
+    public static void doctorMenu(Doctor doctor, Scanner scanner, List<Appointment> appointments)
     {
         System.out.println("Welcome dr." + doctor.getLastName() + " " + doctor.getFirstName());
 

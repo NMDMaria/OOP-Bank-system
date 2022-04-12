@@ -5,8 +5,8 @@ import com.company.user.UserService;
 
 import java.util.Scanner;
 
-public interface Menu {
-    static void menu()
+public class Menu {
+    public static void menu()
     {
         UserService u = UserService.getInstance();
         Scanner scanner = new Scanner(System.in);
