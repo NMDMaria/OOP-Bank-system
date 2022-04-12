@@ -1,26 +1,26 @@
-package com.company.medicine;
+package com.company.procedure;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Checkup extends MedicalProcedure {
-    protected Affection diagnosis;
-    protected List<Treatment> treatments = new ArrayList<>();
-    protected String motive;
-    protected String observations;
+    private Affliction diagnosis;
+    private List<Treatment> treatments = new ArrayList<>();
+    private String motive;
+    private String observations;
 
-    public Checkup(LocalTime start_time, String motive) {
-        super(start_time);
+    public Checkup(LocalTime startTime, String motive) {
+        super(startTime);
         this.motive = motive;
     }
 
-    public Checkup(Integer start_hour, Integer start_minute, String motive) {
-        super(start_hour, start_minute);
+    public Checkup(Integer startHour, Integer startMinute, String motive) {
+        super(startHour, startMinute);
         this.motive = motive;
     }
 
-    public Affection getDiagnosis() {
+    public Affliction getDiagnosis() {
         return diagnosis;
     }
 
@@ -32,7 +32,7 @@ public class Checkup extends MedicalProcedure {
         return observations;
     }
 
-    public void setDiagnosis(Affection diagnosis) {
+    public void setDiagnosis(Affliction diagnosis) {
         this.diagnosis = diagnosis;
     }
 
@@ -61,7 +61,7 @@ public class Checkup extends MedicalProcedure {
             {
                 result += "\nTreatment list: ";
                 for (int i = 1; i <= treatments.size(); i++) {
-                    result = result + "\n" + i + treatments.get(i - 1);
+                    result = result + "\n" + i + ") "+ treatments.get(i - 1);
                 }
             }
             else result = result + "\nWith no treatments.";

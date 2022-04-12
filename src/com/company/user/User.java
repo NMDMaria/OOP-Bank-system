@@ -1,9 +1,9 @@
-package com.company.administrative;
+package com.company.user;
 
 public class User {
-    protected String username;
-    protected String email;
-    protected String password;
+    private String username;
+    private String email;
+    private String password;
 
     public User(String username, String email, String password) {
         this.username = username;

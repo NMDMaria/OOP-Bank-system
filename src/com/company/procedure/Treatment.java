@@ -1,13 +1,13 @@
-package com.company.medicine;
+package com.company.procedure;
 
 public class Treatment {
-    protected String drug;
-    protected Integer numberOfDays;
-    protected Float units; // units per day of treatment
+    private String drug;
+    private Integer numberOfDays;
+    private Float units; // units per day of treatment
 
-    public Treatment(String drug , Integer number_days, Float units) {
+    public Treatment(String drug , Integer numberDays, Float units) {
         this.drug = drug;
-        this.numberOfDays = number_days;
+        this.numberOfDays = numberDays;
         this.units = units;
     }
 

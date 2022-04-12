@@ -1,10 +1,12 @@
-package com.company.medicine;
+package com.company.appointment;
+
+import com.company.appointment.Appointment;
 
 import java.util.Comparator;
 
 public class DateComparator implements Comparator<Appointment>{
     @Override
     public int compare(Appointment a, Appointment b) {
-        return a.date.compareTo(b.date);
+        return a.getDate().compareTo(b.getDate());
     }
 }

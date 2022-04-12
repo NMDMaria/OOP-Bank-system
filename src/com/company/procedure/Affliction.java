@@ -1,15 +1,17 @@
-package com.company.medicine;
+package com.company.procedure;
+
+import com.company.procedure.Severity;
 
 import java.time.LocalDate;
 
-public class Affection {
-    protected String name;
-    protected LocalDate startDate;
-    protected LocalDate endDate;
-    protected Severity severity;
-    protected Boolean cured;
+public class Affliction {
+    private String name;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Severity severity;
+    private Boolean cured;
 
-    public Affection(String name, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
+    public Affliction(String name, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -17,7 +19,7 @@ public class Affection {
         this.cured = cured;
     }
 
-    public Affection(String name, LocalDate startDate, Severity severity) {
+    public Affliction(String name, LocalDate startDate, Severity severity) {
         this.name = name;
         this.startDate = startDate;
         this.severity = severity;

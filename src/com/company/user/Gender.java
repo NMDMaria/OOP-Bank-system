@@ -1,4 +1,4 @@
-package com.company.medicine;
+package com.company.user;
 
 public enum Gender {
     MALE,

@@ -1,24 +1,24 @@
-package com.company.medicine;
+package com.company.procedure;
 
 import java.time.LocalTime;
 
 public class Surgery extends MedicalProcedure {
-    protected String type;
-    protected Severity risk;
-    protected String complications;
+    private String type;
+    private Severity risk;
+    private String complications;
 
-    public Surgery(LocalTime start_time, String type) {
-        super(start_time);
+    public Surgery(LocalTime startTime, String type) {
+        super(startTime);
         this.type = type;
     }
 
-    public Surgery(Integer start_hour, Integer start_minute, String type) {
-        super(start_hour, start_minute);
+    public Surgery(Integer startHour, Integer startMinute, String type) {
+        super(startHour, startMinute);
         this.type = type;
     }
 
-    public Surgery(Integer start_hour, Integer start_minute, String type, Severity risk) {
-        super(start_hour, start_minute);
+    public Surgery(Integer startHour, Integer startMinute, String type, Severity risk) {
+        super(startHour, startMinute);
         this.type = type;
         this.risk = risk;
     }

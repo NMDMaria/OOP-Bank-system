@@ -1,14 +1,15 @@
-package com.company.medicine;
+package com.company.appointment;
+
+import com.company.procedure.MedicalProcedure;
 
 import java.time.*;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class Appointment {
-    protected LocalDateTime date;
-    protected Status status;
-    protected String specialization;
-    protected MedicalProcedure medicalProcedure;
+    private LocalDateTime date;
+    private Status status;
+    private String specialization;
+    private MedicalProcedure medicalProcedure;
 
     public Appointment(LocalDate date, Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
         this.date = LocalDateTime.of(date, LocalTime.of(hour, minute));
@@ -25,10 +26,7 @@ public class Appointment {
     }
 
     public Appointment(Integer day, Integer month, Integer year,Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
-        this.date = LocalDateTime.of(year, month, day, hour, minute);
-        this.status = status;
-        this.specialization = specialization;
-        this.medicalProcedure = medicalProcedure;
+        this(LocalDateTime.of(year, month, day, hour, minute), status, specialization, medicalProcedure);
     }
 
     public LocalDateTime getDate() {
@@ -80,7 +78,7 @@ public class Appointment {
     public String toString() {
         String result = "Appointment at " + date +
                 " with status " + status;
-        result += " specilization " + specialization;
+        result += " specialization " + specialization;
         if (status == Status.DONE)
             result += "\nConcluded with procedure: " + medicalProcedure;
         return result;

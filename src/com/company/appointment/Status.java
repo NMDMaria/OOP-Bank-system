@@ -1,4 +1,4 @@
-package com.company.medicine;
+package com.company.appointment;
 
 public enum Status {
     WAITING,

@@ -1,6 +1,6 @@
-package com.company.medicine;
+package com.company.user;
 
-import com.company.administrative.User;
+import com.company.appointment.Appointment;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Doctor extends User {
-    protected String firstName;
-    protected String lastName;
-    protected LocalDate dateOfBirth;
-    protected LocalDate dateOfEmployment;
-    protected String phoneNumber;
-    protected Double salary;
-    protected String jobName;
-    protected String specialization;
+    private String firstName;
+    private String lastName;
+    private LocalDate dateOfBirth;
+    private LocalDate dateOfEmployment;
+    private String phoneNumber;
+    private Double salary;
+    private String jobName;
+    private String specialization;
 
     protected List<Appointment> appointments = new ArrayList<>();
 
@@ -106,7 +106,7 @@ public class Doctor extends User {
 
     @Override
     public String toString() {
-        return "User " + username + " with email " + email +
+        return "User " + this.getUsername() + " with email " + this.getEmail() +
                 "\nDr." + firstName + ' ' + lastName + '\n' +
                 "Date of birth: " + dateOfBirth +
                 "\nDate of employment: " + dateOfEmployment +
