@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Menu {
     public static void menu()
     {
-        UserService u = UserService.getInstance();
+        UserService userService = UserService.getInstance();
         Scanner scanner = new Scanner(System.in);
         System.out.println("🏥 Welcome to Sirona centre 🏥");
         String option;
@@ -23,11 +23,11 @@ public class Menu {
             switch (option)
             {
                 case "1":{
-                    u.readUser(scanner);
+                    userService.readUser(scanner);
                     break;
                 }
                 case "2": {
-                    u.connect(scanner);
+                    userService.connect(scanner);
                     break;
                 }
                 case "3": {
@@ -39,7 +39,7 @@ public class Menu {
                         case "1": {
                             System.out.println("Enter username: ");
                             String username = scanner.nextLine();
-                            User user = u.findByUsername(username);
+                            User user = userService.findByUsername(username);
                             if (user == null)
                                 System.out.println("No user found.");
                             else {
@@ -47,14 +47,14 @@ public class Menu {
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
-                                    u.deleteUser(user);
+                                    userService.deleteUser(user);
                             }
                             break;
                         }
                         case "2": {
                             System.out.println("Enter email: ");
                             String email = scanner.nextLine();
-                            User user = u.findByEmail(email);
+                            User user = userService.findByEmail(email);
                             if (user == null)
                                 System.out.println("No user found.");
                             else {
@@ -62,7 +62,7 @@ public class Menu {
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
-                                    u.deleteUser(user);
+                                    userService.deleteUser(user);
                             }
                             break;
                         }

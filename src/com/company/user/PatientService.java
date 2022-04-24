@@ -15,7 +15,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PatientService {
-    public static void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments) {
+    private static PatientService instance = null;
+
+    private PatientService(){}
+
+    public static PatientService getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new PatientService();
+        }
+        return instance;
+    }
+
+    public void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments) {
         System.out.println("Welcome " + patient.getLastName() + " " + patient.getFirstName());
 
         String answer;
@@ -30,7 +43,7 @@ public class PatientService {
             switch (answer) {
                 case "1": {
                     try {
-                        Appointment appointment = PatientService.makeAppointment(patient, scanner);
+                        Appointment appointment = this.makeAppointment(patient, scanner);
                         appointments.add(appointment);
                     } catch(Exception e) {
                         System.out.println(e.getMessage());
@@ -52,7 +65,7 @@ public class PatientService {
                                 if (auxDate.length != 3)
                                     throw new Exception("Date invalid.");
 
-                                PatientService.viewAppointments(patient, Integer.parseInt(auxDate[2]),
+                                this.viewAppointments(patient, Integer.parseInt(auxDate[2]),
                                         Integer.parseInt(auxDate[1]), Integer.parseInt(auxDate[0]));
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
@@ -64,7 +77,7 @@ public class PatientService {
                                 auxDate = scanner.nextLine().split("/");
                                 if (auxDate.length != 2)
                                     throw new Exception("Date invalid.");
-                                PatientService.viewAppointments(patient, Integer.parseInt(auxDate[1]), Integer.parseInt(auxDate[0]));
+                                this.viewAppointments(patient, Integer.parseInt(auxDate[1]), Integer.parseInt(auxDate[0]));
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
                             }
@@ -75,7 +88,7 @@ public class PatientService {
                                 auxDate = scanner.nextLine().split("/");
                                 if (auxDate.length != 1)
                                     throw new Exception("Date invalid.");
-                                PatientService.viewAppointments(patient, Integer.parseInt(auxDate[0]));
+                                this.viewAppointments(patient, Integer.parseInt(auxDate[0]));
                             } catch (Exception e) {
                                 System.out.println(e.getMessage());
                             }
@@ -118,7 +131,7 @@ public class PatientService {
                         LocalDateTime newDate = LocalDateTime.of(Integer.parseInt(auxDate[2]), Integer.parseInt(auxDate[1]),
                                 Integer.parseInt(auxDate[0]), Integer.parseInt(auxTime[0]), Integer.parseInt(auxTime[1]));
 
-                        PatientService.moveAppointment(patient, oldDate, newDate);
+                        this.moveAppointment(patient, oldDate, newDate);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -142,7 +155,7 @@ public class PatientService {
                         LocalDateTime date = LocalDateTime.of(Integer.parseInt(auxDate[2]), Integer.parseInt(auxDate[1]),
                                 Integer.parseInt(auxDate[0]), Integer.parseInt(auxTime[0]), Integer.parseInt(auxTime[1]));
 
-                        PatientService.cancelAppointment(patient, date);
+                        this.cancelAppointment(patient, date);
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
@@ -152,7 +165,7 @@ public class PatientService {
         }while(!answer.equals("0"));
     }
 
-    public static Patient readPatient(String username, String email, String password, Scanner scanner){
+    public Patient readPatient(String username, String email, String password, Scanner scanner){
         try {
             System.out.print("First name: ");
             String firstName = scanner.nextLine();
@@ -194,7 +207,7 @@ public class PatientService {
         }
     }
 
-    private static Integer findAppointment(Patient patient, LocalDateTime date)
+    private Integer findAppointment(Patient patient, LocalDateTime date)
     {
         List<Appointment> appointments = patient.getAppointments();
         for (Appointment appointment: appointments) {
@@ -210,7 +223,7 @@ public class PatientService {
         return -1;
     }
 
-    private static Appointment makeAppointment(Patient patient, Scanner sc)
+    private Appointment makeAppointment(Patient patient, Scanner sc)
     {
         try {
             System.out.println("----------------------------");
@@ -265,8 +278,8 @@ public class PatientService {
         }
     }
 
-    private static void cancelAppointment(Patient patient, LocalDateTime date) throws Exception {
-        int index = PatientService.findAppointment(patient, date);
+    private void cancelAppointment(Patient patient, LocalDateTime date) throws Exception {
+        int index = this.findAppointment(patient, date);
         if (index != -1)
         {
             List<Appointment> appointments = patient.getAppointments();
@@ -277,12 +290,12 @@ public class PatientService {
         else throw new Exception("No appointment at given date.");
     }
 
-    private static void moveAppointment(Patient patient, LocalDateTime date, LocalDateTime newDate) throws Exception
+    private void moveAppointment(Patient patient, LocalDateTime date, LocalDateTime newDate) throws Exception
     {
-        int index = PatientService.findAppointment(patient, date);
+        int index = this.findAppointment(patient, date);
         if (index != -1)
         {
-            int checkIndex = PatientService.findAppointment(patient, newDate);
+            int checkIndex = this.findAppointment(patient, newDate);
             List<Appointment> appointments = patient.getAppointments();
             if (checkIndex == -1 || appointments.get(index).getStatus() == Status.CANCELLED) {
                 Appointment appointment = appointments.get(index);
@@ -295,7 +308,7 @@ public class PatientService {
         else throw new Exception("No appointment at the given date.");
     }
 
-    private static void viewAppointments(Patient patient, Integer year, Integer month, Integer day)
+    private void viewAppointments(Patient patient, Integer year, Integer month, Integer day)
     {
         System.out.println("----------------------------");
         List<Appointment> appointments = patient.getAppointments();
@@ -312,7 +325,7 @@ public class PatientService {
         System.out.println("----------------------------");
     }
 
-    private static void viewAppointments(Patient patient, Integer year, Integer month)
+    private void viewAppointments(Patient patient, Integer year, Integer month)
     {
         System.out.println("----------------------------");
         System.out.printf("Appointments for %d-%d\n", month, year);
@@ -330,7 +343,7 @@ public class PatientService {
 
     }
 
-    private static void viewAppointments(Patient patient, Integer year)
+    private void viewAppointments(Patient patient, Integer year)
     {
         System.out.println("----------------------------");
         System.out.printf("Appointments for %d\n", year);

@@ -16,8 +16,9 @@ public class UserService {
 
     public static UserService getInstance()
     {
-        if (instance == null)
+        if (instance == null) {
             instance = new UserService();
+        }
         return instance;
     }
 
@@ -73,12 +74,12 @@ public class UserService {
             switch (type) {
                 case 0:
                     scanner.nextLine();
-                    newUser = PatientService.readPatient(username, email, password, scanner);
+                    newUser = PatientService.getInstance().readPatient(username, email, password, scanner);
                     this.users.add(newUser);
                     return newUser;
                 case 1:
                     scanner.nextLine();
-                    newUser = DoctorService.readDoctor(username, email, password, scanner);
+                    newUser = DoctorService.getInstance().readDoctor(username, email, password, scanner);
                     this.users.add(newUser);
                     return newUser;
                 default:
@@ -116,8 +117,8 @@ public class UserService {
             if (!password.equals(user.getPassword()))
                 throw new Exception("Incorrect password.");
             else {
-                if (user instanceof Doctor) DoctorService.doctorMenu((Doctor) user, scanner, appointments);
-                else if (user instanceof Patient) PatientService.patientMenu((Patient) user, scanner, appointments);
+                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner, appointments);
+                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner, appointments);
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
