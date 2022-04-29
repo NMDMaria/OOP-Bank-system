@@ -1,6 +1,7 @@
 package com.company.utils;
 
 import com.company.appointment.Status;
+import com.company.audit.AuditService;
 import com.company.procedure.Severity;
 import com.company.user.Gender;
 
@@ -123,12 +124,15 @@ public class CSVReader<T> {
             return result;
         }
         catch (FileNotFoundException e) {
+            AuditService.getInstance().write("Error:File doesn't exist.");
             System.out.println("File doesn't exist.");
             // e.printStackTrace();
         } catch (NoSuchFieldException e) {
+            AuditService.getInstance().write("Error:Incorrect CSV header.");
             System.out.println("Incorrect CSV header.");
             // e.printStackTrace();
         } catch (Exception e) {
+            AuditService.getInstance().write("Error:"+e.getMessage());
             System.out.println(e.getMessage());
         }
         return null;

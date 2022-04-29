@@ -2,6 +2,7 @@ package com.company.app;
 
 import com.company.appointment.Appointment;
 import com.company.appointment.AppointmentService;
+import com.company.audit.AuditService;
 import com.company.procedure.affliction.Affliction;
 import com.company.procedure.affliction.AfflictionService;
 import com.company.procedure.checkup.Checkup;
@@ -37,10 +38,13 @@ public class App {
     private List<Surgery> surgeries;
     private List<Affliction> afflictions;
     private List<Treatment> treatments;
+    private AuditService audit;
 
     private static App instance = null;
 
-    private App(){}
+    private App(){
+        audit = AuditService.getInstance();
+    }
 
     public static App getInstance()
     {
@@ -66,6 +70,7 @@ public class App {
 
     public boolean initialize(String directoryPath) {
         try {
+            audit.write("Initializing.");
             this.initialize();
             List<String> orderInit = Arrays.asList("patients", "doctors", "afflictions", "checkups", "surgeries", "treatments","appointments");
 
@@ -152,6 +157,7 @@ public class App {
             }
             return true;
         } catch (Exception e) {
+            audit.write("Init error:" + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -159,6 +165,7 @@ public class App {
 
     public void writeData(String directoryPath)
     {
+        audit.write("Writing data");
         CSVWriter<Patient> patientCSVWriter = new CSVWriter<>();
         patientCSVWriter.toCSV(directoryPath, patients, Patient.class, true);
         CSVWriter<Doctor> doctorCSVWriter = new CSVWriter<>();
@@ -178,7 +185,8 @@ public class App {
 
     public void menu()
     {
-        if (!this.initialize("E:\\PAOproiect\\data"))
+        audit.write("Opening menu");
+        if (!this.initialize("./data"))
             return;
         UserService userService = UserService.getInstance();
         Scanner scanner = new Scanner(System.in);
@@ -196,17 +204,22 @@ public class App {
             {
                 case "1":{
                     User newUser = userService.readUser(scanner);
-                    if (newUser instanceof Patient)
+                    if (newUser instanceof Patient) {
+                        audit.write("New patient from keyboard");
                         patients.add((Patient) newUser);
-                    else if (newUser instanceof Doctor)
+                    } else if (newUser instanceof Doctor){
+                        audit.write("New doctor from keyboard");
                         doctors.add((Doctor) newUser);
+                    }
                     break;
                 }
                 case "2": {
+                    audit.write("Connecting to user");
                     userService.connect(scanner);
                     break;
                 }
                 case "3": {
+                    audit.write("Finding user");
                     System.out.println("1. Find by username");
                     System.out.println("2. Find by email");
                     String type = scanner.nextLine();
@@ -224,6 +237,7 @@ public class App {
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
                                     userService.deleteUser(user);
+                                audit.write("Delete user");
                             }
                             break;
                         }
@@ -239,6 +253,7 @@ public class App {
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
                                     userService.deleteUser(user);
+                                audit.write("Delete user");
                             }
                             break;
                         }
@@ -251,7 +266,7 @@ public class App {
         }while (!option.equals("0"));
 
         // Keeping changes in the files.
-        this.writeData("E:\\PAOproiect\\data");
+        this.writeData("./data");
     }
 
     public List<User> getUsers() {

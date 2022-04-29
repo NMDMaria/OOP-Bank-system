@@ -3,6 +3,7 @@ package com.company.user.doctor;
 import com.company.app.App;
 import com.company.appointment.Appointment;
 import com.company.appointment.Status;
+import com.company.audit.AuditService;
 import com.company.procedure.*;
 import com.company.procedure.affliction.Affliction;
 import com.company.procedure.affliction.AfflictionService;
@@ -97,10 +98,12 @@ public class DoctorService {
             answer = scanner.nextLine();
             switch (answer) {
                 case "1": {
+                    AuditService.getInstance().write("Select appointment");
                     this.selectAppointment(doctor, appointments, medicalProcedures, afflictions, treatments);
                     break;
                 }
                 case "2": {
+                    AuditService.getInstance().write("Display procedures");
                     this.displayProcedures(doctor, medicalProcedures, afflictions, treatments);
                     break;
                 }
@@ -139,6 +142,7 @@ public class DoctorService {
 
                 if (answer.equals("Y") || answer.equals("y"))
                 {
+                    AuditService.getInstance().write("Add appointment");
                     List<Appointment> auxAppointments = doctor.getAppointments();
                     auxAppointments.add(appointment);
                     doctor.setAppointments(auxAppointments);
@@ -186,6 +190,7 @@ public class DoctorService {
     private void doAppointment(Doctor doctor, Appointment appointment, List<MedicalProcedure> medicalProcedures, List<Affliction> afflictions, List<Treatment> treatments)
     {
         try {
+            AuditService.getInstance().write("Do appointment");
             System.out.println("Doctor " + doctor.getLastName() + " proceed with appointment.");
             System.out.println("----------------------------");
             System.out.println("Starting appointment.");
@@ -210,7 +215,9 @@ public class DoctorService {
                 handleCheckup(appointment, medicalProcedure, sc);
                 if (((Checkup) medicalProcedure).getDiagnosis() != null)
                 {
+                    AuditService.getInstance().write("New affliction.");
                     afflictions.add(((Checkup) medicalProcedure).getDiagnosis());
+                    AuditService.getInstance().write("New treatments");
                     for (Treatment t: ((Checkup) medicalProcedure).getTreatments()) {
                         treatments.add(t);
                     }
@@ -227,12 +234,14 @@ public class DoctorService {
         }
         catch (NumberFormatException ne)
         {
+            AuditService.getInstance().write("Error:Invalid number/date.");
             System.out.println("Invalid number/date.");
         }
     }
 
     private void handleCheckup(Appointment appointment, MedicalProcedure medicalProcedure, Scanner sc)
     {
+        AuditService.getInstance().write("Handle checkup");
         System.out.println("Diagnose? (Y/N)");
         String answer = sc.nextLine();
         if (answer.equals("Y") || answer.equals("y")) {
@@ -264,6 +273,7 @@ public class DoctorService {
 
     private void handleSurgery(MedicalProcedure medicalProcedure, Scanner sc)
     {
+        AuditService.getInstance().write("Handle surgery");
         System.out.println("Surgery risk: ");
         String answer = sc.nextLine();
         Severity risk;
@@ -293,6 +303,7 @@ public class DoctorService {
 
     private Affliction diagnose(LocalDateTime startDate, Integer patientId)
     {
+        AuditService.getInstance().write("Diagnose");
         System.out.println("----------------------------");
         String name, auxSeverity;
         Scanner sc = new Scanner(System.in);
@@ -346,6 +357,7 @@ public class DoctorService {
         }
         catch (NumberFormatException ne)
         {
+            AuditService.getInstance().write("Error:Invalid number.");
             System.out.println("Invalid number.");
             return null;
         }

@@ -36,7 +36,7 @@ public class CheckupService {
         }
     }
 
-    public void updateAffliction(List<Checkup> checkups, List<Affliction> afflictions) throws Exception {
+    public void updateAffliction(List<Checkup> checkups, List<Affliction> afflictions)  {
         for (Checkup checkup: checkups) {
             Affliction affliction = afflictions.stream().filter(x -> x.getCheckup() == checkup.getId()).findFirst().orElse(null);
             if (affliction == null)

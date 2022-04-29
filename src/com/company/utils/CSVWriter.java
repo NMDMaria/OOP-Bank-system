@@ -2,6 +2,7 @@ package com.company.utils;
 
 import com.company.appointment.Appointment;
 import com.company.appointment.Status;
+import com.company.audit.AuditService;
 import com.company.procedure.Severity;
 import com.company.procedure.affliction.Affliction;
 import com.company.procedure.checkup.Checkup;
@@ -94,6 +95,7 @@ public class CSVWriter<T> {
             }
             return writeAux.stream().collect(Collectors.joining(this.separator));
         } catch (IllegalAccessException e) {
+            AuditService.getInstance().write("Error:illegal access");
             e.printStackTrace();
             return "";
         }
@@ -118,6 +120,7 @@ public class CSVWriter<T> {
             fout.write(result.toString().getBytes());
             fout.close();
         } catch (IOException e) {
+            AuditService.getInstance().write("Error:IO exception");
             e.printStackTrace();
         }
     }

@@ -2,6 +2,7 @@ package com.company.user.user;
 
 import com.company.app.App;
 import com.company.appointment.Appointment;
+import com.company.audit.AuditService;
 import com.company.procedure.affliction.Affliction;
 import com.company.procedure.checkup.Checkup;
 import com.company.procedure.medicalprocedure.MedicalProcedure;
@@ -138,6 +139,7 @@ public class UserService{
                 else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner);
             }
         }catch (Exception e) {
+            AuditService.getInstance().write("Connect error: "+ e.getMessage());
             System.out.println(e.getMessage());
         }
     }

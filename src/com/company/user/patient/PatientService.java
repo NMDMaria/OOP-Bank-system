@@ -3,6 +3,7 @@ package com.company.user.patient;
 import com.company.app.App;
 import com.company.appointment.Appointment;
 import com.company.appointment.AppointmentService;
+import com.company.audit.AuditService;
 import com.company.procedure.affliction.Affliction;
 import com.company.user.Gender;
 import com.company.user.user.UserService;
@@ -54,13 +55,16 @@ public class PatientService{
                     try {
                         Appointment appointment = this.makeAppointment(patient, medicalProcedures, checkups, surgeries, scanner);
                         appointments.add(appointment);
+                        AuditService.getInstance().write("Make appointment");
                     } catch(Exception e) {
+                        AuditService.getInstance().write("Make appointment error:" + e.getMessage());
                         System.out.println(e.getMessage());
                     }
                     break;
                 }
                 case "2": {
-                    String[] auxDate;
+                    AuditService.getInstance().write("Show appointments");
+                    List<String> auxDate;
 
                     System.out.println("1. Full date (DD/MM/YYYY)");
                     System.out.println("2. Month and year (MM/YYYY)");
@@ -70,45 +74,48 @@ public class PatientService{
                     switch (secondOption) {
                         case "1": {
                             try {
-                                auxDate = scanner.nextLine().split("/");
-                                if (auxDate.length != 3)
+                                auxDate = Arrays.asList(scanner.nextLine().split("/"));
+                                if (auxDate.size() != 3)
                                     throw new Exception("Date invalid.");
 
-                                this.viewAppointments(patient, Integer.parseInt(auxDate[2]),
-                                        Integer.parseInt(auxDate[1]), Integer.parseInt(auxDate[0]));
+                                this.viewAppointments(patient, Integer.parseInt(auxDate.get(2)),
+                                        Integer.parseInt(auxDate.get(1)), Integer.parseInt(auxDate.get(0)));
                             } catch (Exception e) {
+                                AuditService.getInstance().write("Error:" + e.getMessage());
                                 System.out.println(e.getMessage());
                             }
                             break;
                         }
                         case "2": {
                             try {
-                                auxDate = scanner.nextLine().split("/");
-                                if (auxDate.length != 2)
+                                auxDate = List.of(scanner.nextLine().split("/"));
+                                if (auxDate.size() != 2)
                                     throw new Exception("Date invalid.");
-                                this.viewAppointments(patient, Integer.parseInt(auxDate[1]), Integer.parseInt(auxDate[0]));
+                                this.viewAppointments(patient, Integer.parseInt(auxDate.get(1)), Integer.parseInt(auxDate.get(0)));
                             } catch (Exception e) {
+                                AuditService.getInstance().write("Error:" + e.getMessage());
                                 System.out.println(e.getMessage());
                             }
                             break;
                         }
                         case "3": {
                             try {
-                                auxDate = scanner.nextLine().split("/");
-                                if (auxDate.length != 1)
+                                auxDate = List.of(scanner.nextLine().split("/"));
+                                if (auxDate.size() != 1)
                                     throw new Exception("Date invalid.");
-                                this.viewAppointments(patient, Integer.parseInt(auxDate[0]));
+                                this.viewAppointments(patient, Integer.parseInt(auxDate.get(0)));
                             } catch (Exception e) {
+                                AuditService.getInstance().write("Error:" + e.getMessage());
                                 System.out.println(e.getMessage());
                             }
                             break;
                         }
                     }
-
                     break;
                 }
                 case "3": {
                     try{
+                        AuditService.getInstance().write("Move appointment");
                         System.out.println("What's the date for the appointment you want to move?");
 
                         System.out.print("Date (DD/MM/YYYY): ");
@@ -142,12 +149,14 @@ public class PatientService{
 
                         this.moveAppointment(patient, oldDate, newDate);
                     } catch (Exception e) {
+                        AuditService.getInstance().write("Error:" + e.getMessage());
                         System.out.println(e.getMessage());
                     }
                     break;
                 }
                 case "4":{
                     try {
+                        AuditService.getInstance().write("Cancel appointment");
                         System.out.println("What's the date for the appointment you want to cancel?");
 
                         System.out.print("Date (DD/MM/YYYY): ");
@@ -166,6 +175,7 @@ public class PatientService{
 
                         this.cancelAppointment(patient, date);
                     } catch (Exception e) {
+                        AuditService.getInstance().write("Error:" + e.getMessage());
                         System.out.println(e.getMessage());
                     }
                     break;
@@ -207,10 +217,12 @@ public class PatientService{
         }
         catch (NumberFormatException ne)
         {
+            AuditService.getInstance().write("Error:Invalid number/date.");
             System.out.println("Invalid number/date.");
             return null;
         }
         catch (Exception e) {
+            AuditService.getInstance().write("Error:");
             System.out.println(e.getMessage());
             return null;
         }
@@ -260,6 +272,7 @@ public class PatientService{
                     aux = new Checkup(MedicalProcedureService.medicalProcedureKeyGenerator.nextKey(), LocalTime.of(date.getHour(), date.getMinute()), motive);
                     medicalProcedures.add(aux);
                     checkups.add((Checkup) aux);
+                    AuditService.getInstance().write("New checkup");
                     break;
                 }
                 case "surgery": {
@@ -268,6 +281,7 @@ public class PatientService{
                     aux = new Surgery(MedicalProcedureService.medicalProcedureKeyGenerator.nextKey(), date.getHour(), date.getMinute(), surgeryType);
                     medicalProcedures.add(aux);
                     surgeries.add((Surgery) aux);
+                    AuditService.getInstance().write("New surgery");
                     break;
                 }
                 default:
@@ -282,11 +296,13 @@ public class PatientService{
         }
         catch (NumberFormatException ne)
         {
+            AuditService.getInstance().write("Error:Invalid number/date.");
             System.out.println("Invalid number/date.");
             return null;
         }
         catch (Exception e)
         {
+            AuditService.getInstance().write("Error:");
             System.out.println(e.getMessage());
             return null;
         }

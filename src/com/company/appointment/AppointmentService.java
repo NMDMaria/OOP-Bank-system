@@ -1,6 +1,7 @@
 package com.company.appointment;
 
 import com.company.app.App;
+import com.company.audit.AuditService;
 import com.company.procedure.medicalprocedure.MedicalProcedure;
 import com.company.user.doctor.Doctor;
 import com.company.utils.KeyGenerator;
@@ -62,6 +63,7 @@ public class AppointmentService {
                     appointment.setMedicalProcedure(procedure);
             }
         }catch (Exception e) {
+            AuditService.getInstance().write("Error:" + e.getMessage());
             e.printStackTrace();
         }
     }
