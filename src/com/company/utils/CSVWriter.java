@@ -2,7 +2,6 @@ package com.company.utils;
 
 import com.company.appointment.Appointment;
 import com.company.appointment.Status;
-import com.company.audit.AuditService;
 import com.company.procedure.Severity;
 import com.company.procedure.affliction.Affliction;
 import com.company.procedure.checkup.Checkup;
@@ -29,6 +28,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class CSVWriter<T> {
+    // Generic CSV writer
     String separator = ",";
 
     public String getSeparator() {
@@ -41,6 +41,8 @@ public class CSVWriter<T> {
 
     private String toCSV(T object, Class<T> classType)
     {
+        // Provides a string of the object formatted as CSV
+        // each field is transformed
         List<String> writeAux = new ArrayList<>();
         List<Field> fields = this.getAllFields(classType).stream().filter(x->!x.getType().isInterface()).collect(Collectors.toList());
         try {
@@ -73,29 +75,30 @@ public class CSVWriter<T> {
                     writeAux.add(field.get(object).toString());
                 } else if (Status.class.equals(type)) {
                     writeAux.add(field.get(object).toString());
-                } else if (Affliction.class.equals(type)){
+                } else if (Affliction.class.equals(type)) {
                     writeAux.add(((Affliction) field.get(object)).getId().toString());
                 } else if (Appointment.class.equals(type)) {
                     writeAux.add(((Appointment) field.get(object)).getId().toString());
                 } else if (Checkup.class.equals(type)) {
                     writeAux.add(((Checkup) field.get(object)).getId().toString());
-                }else if (Surgery.class.equals(type)) {
+                } else if (Surgery.class.equals(type)) {
                     writeAux.add(((Surgery) field.get(object)).getId().toString());
-                }else if (MedicalProcedure.class.equals(type)) {
+                } else if (MedicalProcedure.class.equals(type)) {
                     writeAux.add(((MedicalProcedure) field.get(object)).getId().toString());
-                }else if (Treatment.class.equals(type)) {
+                } else if (Treatment.class.equals(type)) {
                     writeAux.add(((Treatment) field.get(object)).getId().toString());
-                }else if (Patient.class.equals(type)) {
+                } else if (Patient.class.equals(type)) {
                     writeAux.add(((Patient) field.get(object)).getId().toString());
-                }else if (Doctor.class.equals(type)) {
+                } else if (Doctor.class.equals(type)) {
                     writeAux.add(((Doctor) field.get(object)).getId().toString());
-                }else if (User.class.equals(type)) {
+                } else if (User.class.equals(type)) {
                     writeAux.add(((User) field.get(object)).getId().toString());
+                } else{
+                    writeAux.add(field.get(object).toString());
                 }
             }
             return writeAux.stream().collect(Collectors.joining(this.separator));
         } catch (IllegalAccessException e) {
-            AuditService.getInstance().write("Error:illegal access");
             e.printStackTrace();
             return "";
         }
@@ -103,6 +106,8 @@ public class CSVWriter<T> {
 
     public void toCSV(String directoryPath, List<T> objects, Class<T> classType, Boolean hasHeader)
     {
+        // Makes and/or rewrites in a file named as the plural of the class name
+        // Writes a header with all the fields of the class
         try {
             String plural = classType.getSimpleName().toLowerCase().endsWith("y") ?
                     classType.getSimpleName().toLowerCase().substring(0, classType.getSimpleName().length() - 1).concat("ies")
@@ -120,7 +125,6 @@ public class CSVWriter<T> {
             fout.write(result.toString().getBytes());
             fout.close();
         } catch (IOException e) {
-            AuditService.getInstance().write("Error:IO exception");
             e.printStackTrace();
         }
     }

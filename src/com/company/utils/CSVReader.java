@@ -1,15 +1,12 @@
 package com.company.utils;
 
 import com.company.appointment.Status;
-import com.company.audit.AuditService;
 import com.company.procedure.Severity;
 import com.company.user.Gender;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Parameter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,6 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CSVReader<T> {
+    // Generic CSV reader
     String separator = ",";
 
     public String getSeparator() {
@@ -31,6 +29,9 @@ public class CSVReader<T> {
 
     public List<T> fromCSV(String file, Class<T> classType, boolean hasHeader)
     {
+        // Checks the header, if it exists, with the fields of the class using reflection
+        // Reading each record a new instance is made and each field is set and transformed
+        // according to the application rules
         try (Scanner scanner = new Scanner(new File(file));) {
             List<T> result = new ArrayList<>();
             String line;
@@ -124,15 +125,12 @@ public class CSVReader<T> {
             return result;
         }
         catch (FileNotFoundException e) {
-            AuditService.getInstance().write("Error:File doesn't exist.");
             System.out.println("File doesn't exist.");
             // e.printStackTrace();
         } catch (NoSuchFieldException e) {
-            AuditService.getInstance().write("Error:Incorrect CSV header.");
             System.out.println("Incorrect CSV header.");
             // e.printStackTrace();
         } catch (Exception e) {
-            AuditService.getInstance().write("Error:"+e.getMessage());
             System.out.println(e.getMessage());
         }
         return null;
@@ -160,6 +158,7 @@ public class CSVReader<T> {
 
     private List<Field> getAllFields(Class<T> classType)
     {
+        // Provides all the fields of a class, including its parent class
         List<Field> result = new ArrayList<>();
         Class<?> clazz = classType;
         while (clazz != null) {

@@ -29,7 +29,7 @@ public class MedicalProcedureService {
     }
 
     public boolean checkProcedures(List<MedicalProcedure> medicalProcedures) {
-        // Not all ids are distinct
+        // Checking if ids are distinct
         return medicalProcedures.stream().map(MedicalProcedure::getId).distinct().count() == medicalProcedures.size();
     }
 

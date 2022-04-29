@@ -63,7 +63,6 @@ public class AppointmentService {
                     appointment.setMedicalProcedure(procedure);
             }
         }catch (Exception e) {
-            AuditService.getInstance().write("Error:" + e.getMessage());
             e.printStackTrace();
         }
     }

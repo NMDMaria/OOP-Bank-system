@@ -69,8 +69,11 @@ public class App {
     }
 
     public boolean initialize(String directoryPath) {
+        // Initializing application objects using CSV reader
+        // After reading the objects they are checked to conform to the application rules
+        // and do other initializing like populating lists.
+        // Also, the key generator is updated to match the last id found.
         try {
-            audit.write("Initializing.");
             this.initialize();
             List<String> orderInit = Arrays.asList("patients", "doctors", "afflictions", "checkups", "surgeries", "treatments","appointments");
 
@@ -157,7 +160,6 @@ public class App {
             }
             return true;
         } catch (Exception e) {
-            audit.write("Init error:" + e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -165,7 +167,7 @@ public class App {
 
     public void writeData(String directoryPath)
     {
-        audit.write("Writing data");
+        // Writes all the data using CSV writer
         CSVWriter<Patient> patientCSVWriter = new CSVWriter<>();
         patientCSVWriter.toCSV(directoryPath, patients, Patient.class, true);
         CSVWriter<Doctor> doctorCSVWriter = new CSVWriter<>();
@@ -185,7 +187,6 @@ public class App {
 
     public void menu()
     {
-        audit.write("Opening menu");
         if (!this.initialize("./data"))
             return;
         UserService userService = UserService.getInstance();
@@ -205,21 +206,21 @@ public class App {
                 case "1":{
                     User newUser = userService.readUser(scanner);
                     if (newUser instanceof Patient) {
-                        audit.write("New patient from keyboard");
+                        audit.write("read_patient");
                         patients.add((Patient) newUser);
                     } else if (newUser instanceof Doctor){
-                        audit.write("New doctor from keyboard");
+                        audit.write("read_doctor");
                         doctors.add((Doctor) newUser);
                     }
                     break;
                 }
                 case "2": {
-                    audit.write("Connecting to user");
+                    audit.write("connect");
                     userService.connect(scanner);
                     break;
                 }
                 case "3": {
-                    audit.write("Finding user");
+                    audit.write("find_user");
                     System.out.println("1. Find by username");
                     System.out.println("2. Find by email");
                     String type = scanner.nextLine();
@@ -235,9 +236,10 @@ public class App {
                                 System.out.println(user);
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
-                                if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
+                                if (deleteQuestion.equals("Y") || deleteQuestion.equals("y")) {
                                     userService.deleteUser(user);
-                                audit.write("Delete user");
+                                    audit.write("delete_user");
+                                }
                             }
                             break;
                         }
@@ -251,9 +253,10 @@ public class App {
                                 System.out.println(user);
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
-                                if (deleteQuestion.equals("Y") || deleteQuestion.equals("y"))
+                                if (deleteQuestion.equals("Y") || deleteQuestion.equals("y")) {
                                     userService.deleteUser(user);
-                                audit.write("Delete user");
+                                    audit.write("delete_user");
+                                }
                             }
                             break;
                         }

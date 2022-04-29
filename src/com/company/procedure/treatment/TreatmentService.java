@@ -24,6 +24,7 @@ public class TreatmentService{
 
     public boolean checkTreatments(List<Treatment> treatments)
     {
+        // Checking if ids are distinct
         return treatments.stream().map(Treatment::getId).distinct().count() == treatments.size();
     }
 
