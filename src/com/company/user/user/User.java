@@ -1,14 +1,28 @@
-package com.company.user;
+package com.company.user.user;
 
 public class User {
+    private Integer id;
     private String username;
     private String email;
     private String password;
 
-    public User(String username, String email, String password) {
+    public User()
+    {
+        this.id = null;
+        this.username = null;
+        this.email = null;
+        this.password = null;
+    }
+
+    public User(Integer id, String username, String email, String password) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getUsername() {

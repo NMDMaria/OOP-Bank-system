@@ -1,7 +1,9 @@
-package com.company.user;
+package com.company.user.patient;
 
-import com.company.procedure.Affliction;
+import com.company.procedure.affliction.Affliction;
 import com.company.appointment.Appointment;
+import com.company.user.Gender;
+import com.company.user.user.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,8 +19,17 @@ public class Patient extends User {
     private List<Appointment> appointments = new ArrayList<>();
     private List<Affliction> afflictions = new ArrayList<>();
 
-    public Patient(String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, Gender gender) {
-        super(username, email, password);
+    public Patient()
+    {
+        super();
+        this.firstName = null;
+        this.lastName = null;
+        this.dateOfBirth = null;
+        this.gender = null;
+    }
+
+    public Patient(Integer id, String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, Gender gender) {
+        super(id, username, email, password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
@@ -70,7 +81,7 @@ public class Patient extends User {
         return new ArrayList<>(afflictions);
     }
 
-    public void setAffections(ArrayList<Affliction> afflictions) {
+    public void setAfflictions(List<Affliction> afflictions) {
         this.afflictions.clear();
         this.afflictions.addAll(afflictions);
     }

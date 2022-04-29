@@ -1,17 +1,30 @@
-package com.company.procedure;
+package com.company.procedure.affliction;
 
 import com.company.procedure.Severity;
 
 import java.time.LocalDate;
 
 public class Affliction {
+    private Integer id;
+    private Integer patientId;
     private String name;
     private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate endDate = null;
     private Severity severity;
-    private Boolean cured;
+    private Boolean cured = Boolean.FALSE;
 
-    public Affliction(String name, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
+    public Affliction()
+    {
+        id = null;
+        patientId = null;
+        name = null;
+        startDate = null;
+        severity = null;
+    }
+
+    public Affliction(Integer id, Integer patientId, String name, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
+        this.id = id;
+        this.patientId = patientId;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -19,10 +32,20 @@ public class Affliction {
         this.cured = cured;
     }
 
-    public Affliction(String name, LocalDate startDate, Severity severity) {
+    public Affliction(Integer id, Integer patientId, String name, LocalDate startDate, Severity severity) {
+        this.id = id;
+        this.patientId = patientId;
         this.name = name;
         this.startDate = startDate;
         this.severity = severity;
+    }
+
+    public Integer getPatientId() {
+        return patientId;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {

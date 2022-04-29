@@ -1,20 +1,23 @@
-package com.company.user;
+package com.company.user.patient;
 
 import com.company.appointment.Appointment;
-import com.company.appointment.DateComparator;
+import com.company.appointment.AppointmentService;
+import com.company.procedure.affliction.Affliction;
+import com.company.user.Gender;
+import com.company.user.user.UserService;
+import com.company.utils.DateComparator;
 import com.company.appointment.Status;
-import com.company.procedure.Checkup;
-import com.company.procedure.MedicalProcedure;
-import com.company.procedure.Surgery;
+import com.company.procedure.checkup.Checkup;
+import com.company.procedure.medicalprocedure.MedicalProcedure;
+import com.company.procedure.medicalprocedure.MedicalProcedureService;
+import com.company.procedure.surgery.Surgery;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class PatientService {
+public class PatientService{
     private static PatientService instance = null;
 
     private PatientService(){}
@@ -28,7 +31,8 @@ public class PatientService {
         return instance;
     }
 
-    public void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments) {
+    public void patientMenu(Patient patient, Scanner scanner, List<Appointment> appointments, List<MedicalProcedure> medicalProcedures,
+                            List<Checkup> checkups, List<Surgery> surgeries) {
         System.out.println("Welcome " + patient.getLastName() + " " + patient.getFirstName());
 
         String answer;
@@ -43,7 +47,7 @@ public class PatientService {
             switch (answer) {
                 case "1": {
                     try {
-                        Appointment appointment = this.makeAppointment(patient, scanner);
+                        Appointment appointment = this.makeAppointment(patient, medicalProcedures, checkups, surgeries, scanner);
                         appointments.add(appointment);
                     } catch(Exception e) {
                         System.out.println(e.getMessage());
@@ -194,7 +198,7 @@ public class PatientService {
                     throw new Exception("Invalid gender option.");
             }
 
-            return new Patient(username, email, password, firstName, lastName, dob, gender);
+            return new Patient(UserService.userKeyGenerator.nextKey(), username, email, password, firstName, lastName, dob, gender);
         }
         catch (NumberFormatException ne)
         {
@@ -223,7 +227,7 @@ public class PatientService {
         return -1;
     }
 
-    private Appointment makeAppointment(Patient patient, Scanner sc)
+    private Appointment makeAppointment(Patient patient, List<MedicalProcedure> medicalProcedures, List<Checkup> checkups, List<Surgery> surgeries, Scanner sc)
     {
         try {
             System.out.println("----------------------------");
@@ -248,19 +252,24 @@ public class PatientService {
                 case "checkup": {
                     System.out.println("Motive for checkup: ");
                     String motive = sc.nextLine();
-                    aux = new Checkup(LocalTime.of(date.getHour(), date.getMinute()), motive);
+                    aux = new Checkup(MedicalProcedureService.medicalProcedureKeyGenerator.nextKey(), LocalTime.of(date.getHour(), date.getMinute()), motive);
+                    medicalProcedures.add(aux);
+                    checkups.add((Checkup) aux);
                     break;
                 }
                 case "surgery": {
                     System.out.println("Type of surgery: ");
                     String surgeryType = sc.nextLine();
-                    aux = new Surgery(date.getHour(), date.getMinute(), surgeryType);
+                    aux = new Surgery(MedicalProcedureService.medicalProcedureKeyGenerator.nextKey(), date.getHour(), date.getMinute(), surgeryType);
+                    medicalProcedures.add(aux);
+                    surgeries.add((Surgery) aux);
                     break;
                 }
                 default:
                     throw new Exception("Invalid type");
             }
-            Appointment app = new Appointment(date, Status.WAITING, specialization, aux);
+            Appointment app = new Appointment(AppointmentService.appointmentKeyGenerator.nextKey(), patient.getId(), date, Status.WAITING, specialization, aux);
+            aux.setAppointmentId(app.getId());
             List<Appointment> appointments = patient.getAppointments();
             appointments.add(app);
             patient.setAppointments(appointments);
@@ -358,5 +367,37 @@ public class PatientService {
         }
         System.out.println("----------------------------");
 
+    }
+
+    public void updateAfflictions(List<Patient> patients, List<Affliction> afflictions) throws Exception {
+        for (Affliction affliction: afflictions) {
+            Patient patient = patients.stream().filter(x -> x.getId() == affliction.getPatientId()).findFirst().orElse(null);
+            if (patient == null)
+                throw new Exception("Patient doesn't exist");
+            else{
+                List<Affliction> patientAfflictions = patient.getAffections();
+                if (!patientAfflictions.contains(affliction))
+                {
+                    patientAfflictions.add(affliction);
+                    patient.setAfflictions(patientAfflictions);
+                }
+            }
+        }
+    }
+
+    public void updateAppointments(List<Patient> patients, List<Appointment> appointments) throws Exception {
+        for (Appointment appointment: appointments) {
+            Patient patient = patients.stream().filter(x -> x.getId() == appointment.getPatient()).findFirst().orElse(null);
+            if (patient == null)
+                throw new Exception("Patient doesn't exist");
+            else{
+                List<Appointment> patientAppointments = patient.getAppointments();
+                if (!patientAppointments.contains(appointment))
+                {
+                    patientAppointments.add(appointment);
+                    patient.setAppointments(patientAppointments);
+                }
+            }
+        }
     }
 }

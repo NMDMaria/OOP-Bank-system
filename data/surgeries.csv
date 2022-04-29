@@ -1,0 +1,5 @@
+id,appointmentid,starttime,duration,type,risk,complications
+12,14,12:00,02:12,Open reduction,low,null
+13,15,15:00,04:05,Knee Replacement,high,null
+14,16,10:00,01:42,Appendectomy,medium,null
+15,17,13:00,01:54,Appendectomy,low,null

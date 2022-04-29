@@ -1,17 +1,42 @@
-package com.company.user;
+package com.company.user.user;
 
+import com.company.app.App;
 import com.company.appointment.Appointment;
+import com.company.procedure.affliction.Affliction;
+import com.company.procedure.checkup.Checkup;
+import com.company.procedure.medicalprocedure.MedicalProcedure;
+import com.company.procedure.surgery.Surgery;
+import com.company.procedure.treatment.Treatment;
+import com.company.user.doctor.Doctor;
+import com.company.user.doctor.DoctorService;
+import com.company.user.patient.Patient;
+import com.company.user.patient.PatientService;
+import com.company.utils.KeyGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class UserService {
-    private List<User> users = new ArrayList<>();
-    private List<Appointment> appointments = new ArrayList<>();
+import static java.lang.Math.max;
+
+public class UserService{
+    private List<User> users;
+    private List<Appointment> appointments;
+    private List<MedicalProcedure> medicalProcedures;
+    private List<Treatment> treatments;
+    private List<Affliction> afflictions;
+    private List<Checkup> checkups;
+    private List<Surgery> surgeries;
+
     private static UserService instance;
+    public static KeyGenerator<User> userKeyGenerator = new KeyGenerator<>();
 
     private UserService() {
+        this.users = App.getInstance().getUsers();
+        this.appointments = App.getInstance().getAppointments();
+        this.medicalProcedures = App.getInstance().getMedicalProcedures();
+        this.treatments = App.getInstance().getTreatments();
+        this.afflictions = App.getInstance().getAfflictions();
+        this.checkups = App.getInstance().getCheckups();
+        this.surgeries = App.getInstance().getSurgeries();
     }
 
     public static UserService getInstance()
@@ -45,6 +70,15 @@ public class UserService {
     {
         for (User user:this.users) {
             if (user.getEmail().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public User findById(Integer id)
+    {
+        for (User user:this.users) {
+            if (user.getId().equals(id))
                 return user;
         }
         return null;
@@ -117,8 +151,8 @@ public class UserService {
             if (!password.equals(user.getPassword()))
                 throw new Exception("Incorrect password.");
             else {
-                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner, appointments);
-                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner, appointments);
+                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner, appointments, medicalProcedures, afflictions, treatments);
+                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner, appointments, medicalProcedures, checkups, surgeries);
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -128,5 +162,16 @@ public class UserService {
     public void deleteUser(User user)
     {
         this.users.remove(user);
+    }
+
+    public boolean checkUsers(List<User> users)
+    {
+        if (users.stream().map(x->x.getId()).distinct().count() != users.size())
+            return false;
+        if (users.stream().map(x->x.getUsername()).distinct().count() != users.size())
+            return false;
+        if (users.stream().map(x->x.getEmail()).distinct().count() != users.size())
+            return false;
+        return true;
     }
 }

@@ -1,0 +1,9 @@
+id,patientid,name,startdate,enddate,severity,cured
+1,6,Sinusitis,20-12-2019,12-02-2020,medium,true
+2,7,Allergies,04-03-2002,null,low,false
+3,7,Cold,25-10-2021,30-10-2021,low,true
+4,8,Migraine,06-10-2007,null,medium,false
+5,5,Migraine,30-09-2021,null,high,false
+6,5,COVID,18-04-2022,null,high,false
+7,1,COVID,17-04-2022,null,medium,false
+8,8,Allergies,30-06-2021,null,medium,false

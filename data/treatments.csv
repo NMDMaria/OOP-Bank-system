@@ -1,0 +1,9 @@
+id,medicalprocedure,drug,numberofdays,units
+1,1,Saline nasal spray,30,10
+2,1,Augmentin,14,2
+3,5,Sumatriptan,30,3
+4,4,Ibuprofen,5,1
+5,6,Ibuprofen,14,2
+6,7,Ibuprofen,14,2
+7,8,Loratadine,20,2
+8,8,Cetirizine,14,3

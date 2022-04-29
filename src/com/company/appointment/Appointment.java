@@ -1,32 +1,85 @@
 package com.company.appointment;
 
-import com.company.procedure.MedicalProcedure;
+import com.company.app.App;
+import com.company.procedure.medicalprocedure.MedicalProcedure;
+import com.company.user.patient.Patient;
 
 import java.time.*;
 import java.util.Objects;
 
 public class Appointment {
+    private Integer id;
+    private Integer doctor = null;
+    private Integer patient = null;
     private LocalDateTime date;
     private Status status;
     private String specialization;
     private MedicalProcedure medicalProcedure;
 
-    public Appointment(LocalDate date, Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
-        this.date = LocalDateTime.of(date, LocalTime.of(hour, minute));
-        this.status = status;
-        this.specialization = specialization;
-        this.medicalProcedure = medicalProcedure;
+    public Appointment()
+    {
+        id = null;
+        patient = null;
+        date = null;
+        status = null;
+        specialization = null;
+        medicalProcedure = null;
     }
 
-    public Appointment(LocalDateTime date, Status status, String specialization, MedicalProcedure medicalProcedure) {
+    public Appointment(Integer id, Integer patient,
+                       LocalDateTime date, Status status, String specialization, MedicalProcedure medicalProcedure) {
+        this.id = id;
+        this.patient = patient;
         this.date = date;
         this.status = status;
         this.specialization = specialization;
         this.medicalProcedure = medicalProcedure;
     }
 
-    public Appointment(Integer day, Integer month, Integer year,Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
-        this(LocalDateTime.of(year, month, day, hour, minute), status, specialization, medicalProcedure);
+    public Appointment(Integer id, Integer patient,
+                       LocalDate date, Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
+        this.id = id;
+        this.patient = patient;
+        this.date = LocalDateTime.of(date, LocalTime.of(hour, minute));
+        this.status = status;
+        this.specialization = specialization;
+        this.medicalProcedure = medicalProcedure;
+    }
+
+    public Appointment(Integer id, Integer doctor, Integer patient,
+                       LocalDateTime date, Status status, String specialization, MedicalProcedure medicalProcedure) {
+        this.id = id;
+        this.doctor = doctor;
+        this.patient = patient;
+        this.date = date;
+        this.status = status;
+        this.specialization = specialization;
+        this.medicalProcedure = medicalProcedure;
+    }
+
+    public Appointment(Integer id, Integer patient,
+                       Integer day, Integer month, Integer year,Integer hour, Integer minute, Status status, String specialization, MedicalProcedure medicalProcedure) {
+        this(id,patient, LocalDateTime.of(year, month, day, hour, minute), status, specialization, medicalProcedure);
+    }
+
+    public Integer getDoctor() {
+        return doctor;
+    }
+
+    public Integer getPatient() {
+        return patient;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setDoctor(Integer doctor) {
+        this.doctor = doctor;
+    }
+
+    public void setPatient(Integer patient) {
+        this.patient = patient;
     }
 
     public LocalDateTime getDate() {
@@ -82,5 +135,9 @@ public class Appointment {
         if (status == Status.DONE)
             result += "\nConcluded with procedure: " + medicalProcedure;
         return result;
+    }
+
+    public Integer getId() {
+        return id;
     }
 }
