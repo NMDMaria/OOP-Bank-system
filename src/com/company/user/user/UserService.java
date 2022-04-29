@@ -18,25 +18,10 @@ import java.util.*;
 import static java.lang.Math.max;
 
 public class UserService{
-    private List<User> users;
-    private List<Appointment> appointments;
-    private List<MedicalProcedure> medicalProcedures;
-    private List<Treatment> treatments;
-    private List<Affliction> afflictions;
-    private List<Checkup> checkups;
-    private List<Surgery> surgeries;
-
     private static UserService instance;
     public static KeyGenerator<User> userKeyGenerator = new KeyGenerator<>();
 
     private UserService() {
-        this.users = App.getInstance().getUsers();
-        this.appointments = App.getInstance().getAppointments();
-        this.medicalProcedures = App.getInstance().getMedicalProcedures();
-        this.treatments = App.getInstance().getTreatments();
-        this.afflictions = App.getInstance().getAfflictions();
-        this.checkups = App.getInstance().getCheckups();
-        this.surgeries = App.getInstance().getSurgeries();
     }
 
     public static UserService getInstance()
@@ -47,19 +32,17 @@ public class UserService{
         return instance;
     }
 
-    public List<User> getUsers()
-    {
-        return new ArrayList<>(users);
-    }
 
     public void addUser(User user)
     {
-        this.users.add(user);
+        List<User> aux = App.getInstance().getUsers();
+        aux.add(user);
+        App.getInstance().setUsers(aux);
     }
 
     public User findByUsername(String username)
     {
-        for (User user:this.users) {
+        for (User user:App.getInstance().getUsers()) {
             if (user.getUsername().equals(username))
                 return user;
         }
@@ -68,7 +51,7 @@ public class UserService{
 
     public User findByEmail(String username)
     {
-        for (User user:this.users) {
+        for (User user:App.getInstance().getUsers()) {
             if (user.getEmail().equals(username))
                 return user;
         }
@@ -77,7 +60,7 @@ public class UserService{
 
     public User findById(Integer id)
     {
-        for (User user:this.users) {
+        for (User user:App.getInstance().getUsers()) {
             if (user.getId().equals(id))
                 return user;
         }
@@ -109,12 +92,12 @@ public class UserService{
                 case 0:
                     scanner.nextLine();
                     newUser = PatientService.getInstance().readPatient(username, email, password, scanner);
-                    this.users.add(newUser);
+                    this.addUser(newUser);
                     return newUser;
                 case 1:
                     scanner.nextLine();
                     newUser = DoctorService.getInstance().readDoctor(username, email, password, scanner);
-                    this.users.add(newUser);
+                    this.addUser(newUser);
                     return newUser;
                 default:
                     System.out.println("Invalid option");
@@ -151,8 +134,8 @@ public class UserService{
             if (!password.equals(user.getPassword()))
                 throw new Exception("Incorrect password.");
             else {
-                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner, appointments, medicalProcedures, afflictions, treatments);
-                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner, appointments, medicalProcedures, checkups, surgeries);
+                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner);
+                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner);
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -161,7 +144,9 @@ public class UserService{
 
     public void deleteUser(User user)
     {
-        this.users.remove(user);
+        List<User> aux = App.getInstance().getUsers();
+        aux.remove(user);
+        App.getInstance().setUsers(aux);
     }
 
     public boolean checkUsers(List<User> users)

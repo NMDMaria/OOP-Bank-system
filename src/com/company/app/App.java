@@ -24,6 +24,7 @@ import com.company.utils.CSVWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 public class App {
@@ -74,7 +75,6 @@ public class App {
 
             for (String current : orderInit) {
                 File file = csvFiles.stream().filter(x -> x.getName().equals(current + ".csv")).findFirst().orElse(null);
-                System.out.println(current);
                 if (file != null) {
                     switch (current) {
                         case "patients": {
@@ -110,6 +110,7 @@ public class App {
                             medicalProcedures.addAll(checkups);
                             if (MedicalProcedureService.getInstance().checkProcedures(medicalProcedures) == false)
                                 throw new Exception("Invalid affliction data.");
+                            CheckupService.getInstance().updateAffliction(checkups,afflictions);
                             MedicalProcedureService.medicalProcedureKeyGenerator.updateKey(medicalProcedures.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
@@ -131,6 +132,7 @@ public class App {
                                 throw new Exception("Procedure made for appointment that doesn't exist.");
                             DoctorService.getInstance().updateAppointments(doctors, appointments);
                             PatientService.getInstance().updateAppointments(patients, appointments);
+                            AppointmentService.getInstance().updateProcedure(appointments, medicalProcedures);
                             AppointmentService.appointmentKeyGenerator.updateKey(appointments.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
@@ -155,9 +157,23 @@ public class App {
         }
     }
 
-    public void writeData()
+    public void writeData(String directoryPath)
     {
-        String directoryPath = "E:\\PAOproiect\\data\\output";
+        CSVWriter<Patient> patientCSVWriter = new CSVWriter<>();
+        patientCSVWriter.toCSV(directoryPath, patients, Patient.class, true);
+        CSVWriter<Doctor> doctorCSVWriter = new CSVWriter<>();
+        doctorCSVWriter.toCSV(directoryPath, doctors, Doctor.class, true);
+        CSVWriter<Affliction> afflictionCSVWriter = new CSVWriter<>();
+        afflictionCSVWriter.toCSV(directoryPath, afflictions, Affliction.class, true);
+        CSVWriter<Appointment> appointmentCSVWriter = new CSVWriter<>();
+        appointmentCSVWriter.toCSV(directoryPath, appointments, Appointment.class, true);
+        CSVWriter<Checkup> checkupCSVWriter = new CSVWriter<>();
+        checkupCSVWriter.toCSV(directoryPath, checkups, Checkup.class, true);
+        CSVWriter<Surgery> surgeryCSVWriter = new CSVWriter<>();
+        surgeryCSVWriter.toCSV(directoryPath, surgeries, Surgery.class, true);
+        CSVWriter<Treatment> treatmentCSVWriter = new CSVWriter<>();
+        treatmentCSVWriter.toCSV(directoryPath, treatments, Treatment.class, true);
+
     }
 
     public void menu()
@@ -234,7 +250,8 @@ public class App {
             }
         }while (!option.equals("0"));
 
-        this.writeData();
+        // Keeping changes in the files.
+        this.writeData("E:\\PAOproiect\\data");
     }
 
     public List<User> getUsers() {

@@ -1,5 +1,6 @@
 package com.company.procedure.checkup;
 
+import com.company.procedure.affliction.Affliction;
 import com.company.procedure.treatment.Treatment;
 
 import java.util.*;
@@ -35,4 +36,14 @@ public class CheckupService {
         }
     }
 
+    public void updateAffliction(List<Checkup> checkups, List<Affliction> afflictions) throws Exception {
+        for (Checkup checkup: checkups) {
+            Affliction affliction = afflictions.stream().filter(x -> x.getCheckup() == checkup.getId()).findFirst().orElse(null);
+            if (affliction == null)
+                checkup.setDiagnosis(null);
+            else{
+                checkup.setDiagnosis(affliction);
+            }
+        }
+    }
 }

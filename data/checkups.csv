@@ -10,3 +10,4 @@ id,appointmentid,starttime,duration,diagnosis,motive,observations
 9,11,12:00,00:00,null,Recommended,null
 10,12,13:15,00:00,null,Having symptoms,null
 11,13,14:00,00:00,null,Verify treatment,null
+16,18,12:00,00:00,null,routine,null

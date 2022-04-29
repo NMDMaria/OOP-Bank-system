@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) {
-       App.getInstance().initialize("E:\\PAOproiect\\data");
-       App.getInstance().writeData();
+        App.getInstance().menu();
     }
 }

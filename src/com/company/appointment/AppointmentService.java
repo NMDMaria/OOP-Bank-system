@@ -1,5 +1,6 @@
 package com.company.appointment;
 
+import com.company.app.App;
 import com.company.procedure.medicalprocedure.MedicalProcedure;
 import com.company.user.doctor.Doctor;
 import com.company.utils.KeyGenerator;
@@ -50,6 +51,20 @@ public class AppointmentService {
         return true;
     }
 
+    public void updateProcedure(List<Appointment> appointments, List<MedicalProcedure> medicalProcedures)
+    {
+        try {
+            for (MedicalProcedure procedure : medicalProcedures) {
+                Appointment appointment = appointments.stream().filter(x->x.getId()==procedure.getAppointmentId()).findFirst().orElse(null);
+                if (appointment == null)
+                    throw new Exception("Incorrect appointment/procedure");
+                else
+                    appointment.setMedicalProcedure(procedure);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public Appointment findById(List<Appointment> appointments, int appointmentid) {
         return appointments.stream().filter(x->x.getId() == appointmentid).findFirst().orElse(null);

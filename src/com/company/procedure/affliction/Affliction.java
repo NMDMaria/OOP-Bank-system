@@ -8,6 +8,7 @@ public class Affliction {
     private Integer id;
     private Integer patientId;
     private String name;
+    private Integer checkup;
     private LocalDate startDate;
     private LocalDate endDate = null;
     private Severity severity;
@@ -16,10 +17,27 @@ public class Affliction {
     public Affliction()
     {
         id = null;
+        checkup = null;
         patientId = null;
         name = null;
         startDate = null;
         severity = null;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setPatientId(Integer patientId) {
+        this.patientId = patientId;
+    }
+
+    public Integer getCheckup() {
+        return checkup;
+    }
+
+    public void setCheckup(Integer checkup) {
+        this.checkup = checkup;
     }
 
     public Affliction(Integer id, Integer patientId, String name, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
@@ -90,9 +108,6 @@ public class Affliction {
 
     @Override
     public String toString() {
-        return "Affection name: '" + name + '\n' +
-                ", start date " + startDate +
-                ", end date " + endDate +
-                ", severity " + severity;
+        return  name  + ", start date " + startDate + ", severity " + severity;
     }
 }

@@ -41,7 +41,6 @@ public class CSVReader<T> {
                 line = scanner.nextLine();
                 stringList = Arrays.asList(line.split(this.separator));
                 headerList = new ArrayList<>();
-                int counter = 0;
                 for (String s : stringList.stream().map(x -> x.toLowerCase()).collect(Collectors.toList())) {
                     Field field = this.getField(s,classType);
                     if (field == null)
@@ -50,7 +49,6 @@ public class CSVReader<T> {
                         throw new Exception("Invalid header.");
                     else {
                         headerList.add(field);
-                        counter += 1;
                     }
                 }
             }

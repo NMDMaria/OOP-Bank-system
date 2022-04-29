@@ -1,5 +1,6 @@
 package com.company.user.doctor;
 
+import com.company.app.App;
 import com.company.appointment.Appointment;
 import com.company.appointment.Status;
 import com.company.procedure.*;
@@ -79,8 +80,12 @@ public class DoctorService {
         }
     }
 
-    public void doctorMenu(Doctor doctor, Scanner scanner, List<Appointment> appointments, List<MedicalProcedure> medicalProcedures, List<Affliction> afflictions, List<Treatment> treatments)
+    public void doctorMenu(Doctor doctor, Scanner scanner)
     {
+        List<Appointment> appointments = App.getInstance().getAppointments();
+        List<MedicalProcedure> medicalProcedures = App.getInstance().getMedicalProcedures();
+        List<Affliction> afflictions = App.getInstance().getAfflictions();
+        List<Treatment> treatments = App.getInstance().getTreatments();
         System.out.println("Welcome dr." + doctor.getLastName() + " " + doctor.getFirstName());
 
         String answer;
