@@ -40,6 +40,8 @@ public class CSVReader<T> {
 
             if (hasHeader == Boolean.TRUE)
             {
+                if (!scanner.hasNextLine())
+                    return result;
                 line = scanner.nextLine();
                 stringList = Arrays.asList(line.split(this.separator));
                 headerList = new ArrayList<>();
@@ -80,7 +82,7 @@ public class CSVReader<T> {
                     }
                     for (int i = 0; i < stringList.size(); i++)
                     {
-                        if (headerList.get(i).getName() == field.getName())
+                        if (headerList.get(i).getName().equals(field.getName()))
                         {
                             Class<?> type = field.getType();
                             if (stringList.get(i).equalsIgnoreCase("null")) {

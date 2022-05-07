@@ -21,10 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CSVWriter<T> {
@@ -113,7 +110,10 @@ public class CSVWriter<T> {
                     classType.getSimpleName().toLowerCase().substring(0, classType.getSimpleName().length() - 1).concat("ies")
                     : classType.getSimpleName().toLowerCase().concat("s");
             File file = new File(directoryPath + "\\" + plural + ".csv");
-            file.createNewFile(); // create file if it doesn't exist
+            boolean checkUpdate = !file.createNewFile();
+            // file exists need to check if update is needed
+
+
             FileOutputStream fout = new FileOutputStream(file);
             StringBuilder result = new StringBuilder();
             if (hasHeader == Boolean.TRUE)
@@ -122,6 +122,23 @@ public class CSVWriter<T> {
                 result.append("\n");
             }
             result.append(objects.stream().map(x->this.toCSV(x, classType)).collect(Collectors.joining("\n")));
+
+            if (checkUpdate)
+            {
+                try(Scanner scanner = new Scanner(file);) {
+                    String fileContent = "";
+                    while (scanner.hasNextLine())
+                    {
+                        fileContent += scanner.nextLine();
+                    }
+                    if (fileContent.equals(result.toString()))
+                    {
+                        fout.close();
+                        return;
+                    }
+                }
+            }
+
             fout.write(result.toString().getBytes());
             fout.close();
         } catch (IOException e) {

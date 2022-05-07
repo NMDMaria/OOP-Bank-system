@@ -54,7 +54,8 @@ public class PatientService{
                 case "1": {
                     try {
                         Appointment appointment = this.makeAppointment(patient, medicalProcedures, checkups, surgeries, scanner);
-                        appointments.add(appointment);
+                        if (appointment != null)
+                            appointments.add(appointment);
                         AuditService.getInstance().write("make_appointment");
                     } catch(Exception e) {
                         System.out.println(e.getMessage());

@@ -91,7 +91,8 @@ public class App {
                             users.addAll(patients);
                             if (UserService.getInstance().checkUsers(users) == false)
                                 throw new Exception("Invalid user data.");
-                            UserService.userKeyGenerator.updateKey(users.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (users.size() > 0)
+                                UserService.userKeyGenerator.updateKey(users.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "doctors": {
@@ -100,7 +101,8 @@ public class App {
                             users.addAll(doctors);
                             if (UserService.getInstance().checkUsers(users) == false)
                                 throw new Exception("Invalid user data.");
-                            UserService.userKeyGenerator.updateKey(users.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (users.size() > 0)
+                                UserService.userKeyGenerator.updateKey(users.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "afflictions": {
@@ -109,7 +111,8 @@ public class App {
                             if (AfflictionService.getInstance().checkAfflictions(afflictions, patients) == false)
                                 throw new Exception("Invalid affliction data.");
                             PatientService.getInstance().updateAfflictions(patients, afflictions);
-                            AfflictionService.afflictionKeyGenerator.updateKey(afflictions.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (afflictions.size() > 0)
+                                AfflictionService.afflictionKeyGenerator.updateKey(afflictions.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "checkups": {
@@ -119,7 +122,8 @@ public class App {
                             if (MedicalProcedureService.getInstance().checkProcedures(medicalProcedures) == false)
                                 throw new Exception("Invalid affliction data.");
                             CheckupService.getInstance().updateAffliction(checkups,afflictions);
-                            MedicalProcedureService.medicalProcedureKeyGenerator.updateKey(medicalProcedures.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (medicalProcedures.size() > 0)
+                                MedicalProcedureService.medicalProcedureKeyGenerator.updateKey(medicalProcedures.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "surgeries": {
@@ -128,7 +132,8 @@ public class App {
                             medicalProcedures.addAll(surgeries);
                             if (MedicalProcedureService.getInstance().checkProcedures(medicalProcedures) == false)
                                 throw new Exception("Invalid affliction data.");
-                            MedicalProcedureService.medicalProcedureKeyGenerator.updateKey(medicalProcedures.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (medicalProcedures.size() > 0)
+                                MedicalProcedureService.medicalProcedureKeyGenerator.updateKey(medicalProcedures.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "appointments": {
@@ -141,7 +146,8 @@ public class App {
                             DoctorService.getInstance().updateAppointments(doctors, appointments);
                             PatientService.getInstance().updateAppointments(patients, appointments);
                             AppointmentService.getInstance().updateProcedure(appointments, medicalProcedures);
-                            AppointmentService.appointmentKeyGenerator.updateKey(appointments.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (appointments.size() > 0)
+                                AppointmentService.appointmentKeyGenerator.updateKey(appointments.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                         case "treatments": {
@@ -150,14 +156,14 @@ public class App {
                             if (TreatmentService.getInstance().checkTreatments(treatments) == false)
                                 throw new Exception("Invalid data.");
                             CheckupService.getInstance().updateTreatments(checkups, treatments);
-                            TreatmentService.treatmentKeyGenerator.updateKey(treatments.stream().map(x->x.getId()).max(Integer::compare).get());
+                            if (treatments.size() > 0)
+                                TreatmentService.treatmentKeyGenerator.updateKey(treatments.stream().map(x->x.getId()).max(Integer::compare).get());
                             break;
                         }
                     }
-                } else {
-                    throw new Exception("Not enough files to initialize.");
                 }
             }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
