@@ -1,4 +1,4 @@
-package com.company.appointment;
+package com.company.utils;
 
 import com.company.appointment.Appointment;
 

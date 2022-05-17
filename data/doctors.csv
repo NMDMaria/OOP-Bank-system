@@ -1,0 +1,6 @@
+id,username,email,password,firstname,lastname,dateofbirth,dateofemployment,phonenumber,salary,jobname,specialization
+2,pvanelli0,pvanelli0@sirona.com,phillipe1996,Phillipe,Vanelli,07-02-1996,08-02-2021,7407757198,29212.65,surgeon,general
+3,jwroath1,jwroath1@sirona.com,jonasWr28,Jonas,Wroath,28-03-1989,10-06-2020,6323273372,97604.77,surgeon,general
+4,lillymaryman2,lillymaryman2@sirona.com,2001lilly,Lilly,Maryman,30-01-2001,01-03-2019,8431999356,18449.73,doctor,general
+9,tgray,tgray@sirona.com,tgray2000,Taylor,Gray,30-05-2000,03-05-2021,9061556278,3701.06,doctor,pneumology
+10,maryCh,maryCh@sirona.com,maryCh98,Mary,Chaves,22-12-1998,04-11-2019,6654948769,73327.82,doctor,family physician

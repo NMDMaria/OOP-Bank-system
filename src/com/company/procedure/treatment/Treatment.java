@@ -1,14 +1,35 @@
-package com.company.procedure;
+package com.company.procedure.treatment;
 
 public class Treatment {
+    private Integer id;
+    private Integer medicalProcedure;
     private String drug;
     private Integer numberOfDays;
     private Float units; // units per day of treatment
 
-    public Treatment(String drug , Integer numberDays, Float units) {
+    public Treatment()
+    {
+        id = null;
+        medicalProcedure = null;
+        drug = null;
+        numberOfDays = null;
+        units = null;
+    }
+
+    public Treatment(Integer id, Integer medicalProcedure, String drug , Integer numberDays, Float units) {
+        this.id = id;
+        this.medicalProcedure = medicalProcedure;
         this.drug = drug;
         this.numberOfDays = numberDays;
         this.units = units;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getMedicalProcedure() {
+        return medicalProcedure;
     }
 
     public String getDrug() {

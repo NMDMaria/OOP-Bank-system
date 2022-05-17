@@ -1,4 +1,8 @@
-package com.company.procedure;
+package com.company.procedure.checkup;
+
+import com.company.procedure.treatment.Treatment;
+import com.company.procedure.affliction.Affliction;
+import com.company.procedure.medicalprocedure.MedicalProcedure;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -10,13 +14,22 @@ public class Checkup extends MedicalProcedure {
     private String motive;
     private String observations;
 
-    public Checkup(LocalTime startTime, String motive) {
-        super(startTime);
-        this.motive = motive;
+    public Checkup()
+    {
+        super();
+        diagnosis = null;
+        motive = null;
+        observations = null;
     }
 
-    public Checkup(Integer startHour, Integer startMinute, String motive) {
-        super(startHour, startMinute);
+    public Checkup(Integer id, Integer appointmentId, LocalTime startTime, LocalTime duration, String motive, String observations) {
+        super(id, appointmentId, startTime, duration);
+        this.motive = motive;
+        this.observations = observations;
+    }
+
+    public Checkup(Integer id, LocalTime startTime, String motive) {
+        super(id, startTime);
         this.motive = motive;
     }
 

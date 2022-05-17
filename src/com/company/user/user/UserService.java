@@ -1,39 +1,42 @@
-package com.company.user;
+package com.company.user.user;
 
-import com.company.appointment.Appointment;
+import com.company.app.App;
+import com.company.user.doctor.Doctor;
+import com.company.user.doctor.DoctorService;
+import com.company.user.patient.Patient;
+import com.company.user.patient.PatientService;
+import com.company.utils.KeyGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
-public class UserService {
-    private List<User> users = new ArrayList<>();
-    private List<Appointment> appointments = new ArrayList<>();
+import static java.lang.Math.max;
+
+public class UserService{
     private static UserService instance;
+    public static KeyGenerator<User> userKeyGenerator = new KeyGenerator<>();
 
     private UserService() {
     }
 
     public static UserService getInstance()
     {
-        if (instance == null)
+        if (instance == null) {
             instance = new UserService();
+        }
         return instance;
     }
 
-    public List<User> getUsers()
-    {
-        return new ArrayList<>(users);
-    }
 
     public void addUser(User user)
     {
-        this.users.add(user);
+        List<User> aux = App.getInstance().getUsers();
+        aux.add(user);
+        App.getInstance().setUsers(aux);
     }
 
     public User findByUsername(String username)
     {
-        for (User user:this.users) {
+        for (User user:App.getInstance().getUsers()) {
             if (user.getUsername().equals(username))
                 return user;
         }
@@ -42,8 +45,17 @@ public class UserService {
 
     public User findByEmail(String username)
     {
-        for (User user:this.users) {
+        for (User user:App.getInstance().getUsers()) {
             if (user.getEmail().equals(username))
+                return user;
+        }
+        return null;
+    }
+
+    public User findById(Integer id)
+    {
+        for (User user:App.getInstance().getUsers()) {
+            if (user.getId().equals(id))
                 return user;
         }
         return null;
@@ -73,13 +85,13 @@ public class UserService {
             switch (type) {
                 case 0:
                     scanner.nextLine();
-                    newUser = PatientService.readPatient(username, email, password, scanner);
-                    this.users.add(newUser);
+                    newUser = PatientService.getInstance().readPatient(username, email, password, scanner);
+                    this.addUser(newUser);
                     return newUser;
                 case 1:
                     scanner.nextLine();
-                    newUser = DoctorService.readDoctor(username, email, password, scanner);
-                    this.users.add(newUser);
+                    newUser = DoctorService.getInstance().readDoctor(username, email, password, scanner);
+                    this.addUser(newUser);
                     return newUser;
                 default:
                     System.out.println("Invalid option");
@@ -116,8 +128,8 @@ public class UserService {
             if (!password.equals(user.getPassword()))
                 throw new Exception("Incorrect password.");
             else {
-                if (user instanceof Doctor) DoctorService.doctorMenu((Doctor) user, scanner, appointments);
-                else if (user instanceof Patient) PatientService.patientMenu((Patient) user, scanner, appointments);
+                if (user instanceof Doctor) DoctorService.getInstance().doctorMenu((Doctor) user, scanner);
+                else if (user instanceof Patient) PatientService.getInstance().patientMenu((Patient) user, scanner);
             }
         }catch (Exception e) {
             System.out.println(e.getMessage());
@@ -126,6 +138,19 @@ public class UserService {
 
     public void deleteUser(User user)
     {
-        this.users.remove(user);
+        List<User> aux = App.getInstance().getUsers();
+        aux.remove(user);
+        App.getInstance().setUsers(aux);
+    }
+
+    public boolean checkUsers(List<User> users)
+    {
+        if (users.stream().map(x->x.getId()).distinct().count() != users.size())
+            return false;
+        if (users.stream().map(x->x.getUsername()).distinct().count() != users.size())
+            return false;
+        if (users.stream().map(x->x.getEmail()).distinct().count() != users.size())
+            return false;
+        return true;
     }
 }

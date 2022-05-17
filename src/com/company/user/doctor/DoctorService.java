@@ -1,18 +1,39 @@
-package com.company.user;
+package com.company.user.doctor;
 
+import com.company.app.App;
 import com.company.appointment.Appointment;
 import com.company.appointment.Status;
+import com.company.audit.AuditService;
 import com.company.procedure.*;
+import com.company.procedure.affliction.Affliction;
+import com.company.procedure.affliction.AfflictionService;
+import com.company.procedure.checkup.Checkup;
+import com.company.procedure.medicalprocedure.MedicalProcedure;
+import com.company.procedure.surgery.Surgery;
+import com.company.procedure.treatment.Treatment;
+import com.company.procedure.treatment.TreatmentService;
+import com.company.user.user.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class DoctorService {
-    public static Doctor readDoctor(String username, String email, String password, Scanner scanner)
+    private static DoctorService instance = null;
+
+    private DoctorService(){}
+
+    public static DoctorService getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new DoctorService();
+        }
+        return instance;
+    }
+
+    public Doctor readDoctor(String username, String email, String password, Scanner scanner)
     {
         try {
             System.out.print("First name: ");
@@ -47,7 +68,7 @@ public class DoctorService {
             System.out.print("Specialization: ");
             String specialization = scanner.nextLine();
 
-            return new Doctor(username, email, password, firstName, lastName, dob, doe, phoneNumber, salary, jobName, specialization);
+            return new Doctor(UserService.userKeyGenerator.nextKey(), username, email, password, firstName, lastName, dob, doe, phoneNumber, salary, jobName, specialization);
         }
         catch (NumberFormatException ne)
         {
@@ -60,8 +81,12 @@ public class DoctorService {
         }
     }
 
-    public static void doctorMenu(Doctor doctor, Scanner scanner, List<Appointment> appointments)
+    public void doctorMenu(Doctor doctor, Scanner scanner)
     {
+        List<Appointment> appointments = App.getInstance().getAppointments();
+        List<MedicalProcedure> medicalProcedures = App.getInstance().getMedicalProcedures();
+        List<Affliction> afflictions = App.getInstance().getAfflictions();
+        List<Treatment> treatments = App.getInstance().getTreatments();
         System.out.println("Welcome dr." + doctor.getLastName() + " " + doctor.getFirstName());
 
         String answer;
@@ -73,11 +98,13 @@ public class DoctorService {
             answer = scanner.nextLine();
             switch (answer) {
                 case "1": {
-                    DoctorService.selectAppointment(doctor, appointments);
+                    AuditService.getInstance().write("select_appointment");
+                    this.selectAppointment(doctor, appointments, medicalProcedures, afflictions, treatments);
                     break;
                 }
                 case "2": {
-                    DoctorService.displayProcedures(doctor);
+                    AuditService.getInstance().write("display_procedures");
+                    this.displayProcedures(doctor, medicalProcedures, afflictions, treatments);
                     break;
                 }
             }
@@ -85,7 +112,7 @@ public class DoctorService {
         }while(!answer.equals("0"));
     }
 
-    private static Boolean isAvailable(Doctor doctor, LocalDateTime date)
+    private Boolean isAvailable(Doctor doctor, LocalDateTime date)
     {
         for (Appointment appointment: doctor.getAppointments()) {
             if (appointment.getDate().getYear() == date.getYear() &&
@@ -98,7 +125,7 @@ public class DoctorService {
         return Boolean.TRUE;
     }
 
-    private static void selectAppointment(Doctor doctor, List<Appointment> appointments)
+    private void selectAppointment(Doctor doctor, List<Appointment> appointments, List<MedicalProcedure> medicalProcedures, List<Affliction> afflictions, List<Treatment> treatments)
     {
         System.out.println("Doctor " + doctor.getLastName() + " select appointments");
         System.out.println("----------------------------");
@@ -115,6 +142,7 @@ public class DoctorService {
 
                 if (answer.equals("Y") || answer.equals("y"))
                 {
+                    AuditService.getInstance().write("mark_appointment");
                     List<Appointment> auxAppointments = doctor.getAppointments();
                     auxAppointments.add(appointment);
                     doctor.setAppointments(auxAppointments);
@@ -134,11 +162,11 @@ public class DoctorService {
         System.out.println("----------------------------");
     }
 
-    static void displayProcedures(Doctor doctor)
+    private void displayProcedures(Doctor doctor, List<MedicalProcedure> medicalProcedures, List<Affliction> afflictions, List<Treatment> treatments)
     {
         for (Appointment appointment: doctor.getAppointments()) {
-                System.out.println(appointment);
                 if (appointment.getStatus() == Status.WAITING) {
+                    System.out.println(appointment);
                     System.out.println("Proceed?(Y/N)");
                     String answer;
                     Scanner sc = new Scanner(System.in);
@@ -146,7 +174,7 @@ public class DoctorService {
 
                     if (answer.equals("Y") || answer.equals("y"))
                     {
-                        DoctorService.doAppointment(doctor, appointment);
+                        this.doAppointment(doctor, appointment, medicalProcedures, afflictions, treatments);
                         System.out.println("Continue to view? (Y/N)");
                         answer = sc.nextLine();
 
@@ -159,9 +187,10 @@ public class DoctorService {
         }
     }
 
-    private static void doAppointment(Doctor doctor, Appointment appointment)
+    private void doAppointment(Doctor doctor, Appointment appointment, List<MedicalProcedure> medicalProcedures, List<Affliction> afflictions, List<Treatment> treatments)
     {
         try {
+            AuditService.getInstance().write("do_appointment");
             System.out.println("Doctor " + doctor.getLastName() + " proceed with appointment.");
             System.out.println("----------------------------");
             System.out.println("Starting appointment.");
@@ -184,11 +213,20 @@ public class DoctorService {
 
             if (medicalProcedure instanceof Checkup) {
                 handleCheckup(appointment, medicalProcedure, sc);
+                if (((Checkup) medicalProcedure).getDiagnosis() != null)
+                {
+                    afflictions.add(((Checkup) medicalProcedure).getDiagnosis());
+                    for (Treatment t: ((Checkup) medicalProcedure).getTreatments()) {
+                        treatments.add(t);
+                    }
+                }
             } else if (medicalProcedure instanceof Surgery) {
                handleSurgery(medicalProcedure, sc);
             }
             appointment.setMedicalProcedure(medicalProcedure);
             appointment.setStatus(Status.DONE);
+            appointment.setDoctor(doctor.getId());
+
             System.out.println("Appointment done.");
             System.out.println("----------------------------");
         }
@@ -198,18 +236,19 @@ public class DoctorService {
         }
     }
 
-    private static void handleCheckup(Appointment appointment, MedicalProcedure medicalProcedure, Scanner sc)
+    private void handleCheckup(Appointment appointment, MedicalProcedure medicalProcedure, Scanner sc)
     {
+        AuditService.getInstance().write("handle_checkup");
         System.out.println("Diagnose? (Y/N)");
         String answer = sc.nextLine();
         if (answer.equals("Y") || answer.equals("y")) {
-            Affliction diagnose = DoctorService.diagnose(appointment.getDate());
+            Affliction diagnose = this.diagnose(appointment.getDate(), appointment.getPatient());
             ((Checkup) medicalProcedure).setDiagnosis(diagnose);
             System.out.println("Add treatments? (Y/N)");
             answer = sc.nextLine();
             if (answer.equals("Y") || answer.equals("y")) {
                 ((Checkup) medicalProcedure).setTreatments(
-                        DoctorService.planTreatment(((Checkup) medicalProcedure).getDiagnosis()));
+                        this.planTreatment(((Checkup) medicalProcedure).getDiagnosis(), (Checkup) medicalProcedure));
             }
         }
         System.out.println("Observations: ");
@@ -219,18 +258,19 @@ public class DoctorService {
         String aux = sc.nextLine();
         int hours, minutes;
         if (aux.equals("\n")) {
-            hours = 0;
-            minutes = 20;
+            medicalProcedure.setDuration(LocalTime.of(0, 20));
         } else {
             hours = Integer.parseInt(aux);
             minutes = Integer.parseInt(sc.nextLine());
+            System.out.println(hours);
+            medicalProcedure.setDuration(LocalTime.of(hours, minutes));
         }
 
-        medicalProcedure.setDuration(LocalTime.of(hours, minutes));
     }
 
-    private static void handleSurgery(MedicalProcedure medicalProcedure, Scanner sc)
+    private void handleSurgery(MedicalProcedure medicalProcedure, Scanner sc)
     {
+        AuditService.getInstance().write("handle_surgery");
         System.out.println("Surgery risk: ");
         String answer = sc.nextLine();
         Severity risk;
@@ -258,8 +298,9 @@ public class DoctorService {
         medicalProcedure.setDuration(LocalTime.of(hours, minutes));
     }
 
-    private static Affliction diagnose(LocalDateTime startDate)
+    private Affliction diagnose(LocalDateTime startDate, Integer patientId)
     {
+        AuditService.getInstance().write("diagnose");
         System.out.println("----------------------------");
         String name, auxSeverity;
         Scanner sc = new Scanner(System.in);
@@ -281,11 +322,12 @@ public class DoctorService {
                 severity = Severity.INSIGNIFICANT; break;
         }
 
-        return new Affliction(name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
+        return new Affliction(AfflictionService.afflictionKeyGenerator.nextKey(), patientId,name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
     }
 
-    private static List<Treatment> planTreatment(Affliction diagnosis)
+    private List<Treatment> planTreatment(Affliction diagnosis, Checkup checkup)
     {
+        AuditService.getInstance().write("plan_treatment");
         try {
             System.out.println("Treatment for " + diagnosis.getName());
             System.out.println("----------------------------");
@@ -303,7 +345,7 @@ public class DoctorService {
                 float units;
                 units = Float.parseFloat(sc.nextLine());
 
-                Treatment treatment = new Treatment(drug, numberOfDays, units);
+                Treatment treatment = new Treatment(TreatmentService.treatmentKeyGenerator.nextKey(), checkup.getId(), drug, numberOfDays, units);
                 treatments.add(treatment);
                 System.out.println("Add treatment (Y/N)");
                 answer = sc.nextLine();
@@ -315,6 +357,22 @@ public class DoctorService {
         {
             System.out.println("Invalid number.");
             return null;
+        }
+    }
+
+    public void updateAppointments(List<Doctor> doctors, List<Appointment> appointments) throws Exception {
+        for (Appointment appointment: appointments) {
+            Doctor doctor = doctors.stream().filter(x -> x.getId() == appointment.getDoctor()).findFirst().orElse(null);
+            if (doctor == null)
+                continue;
+            else{
+                List<Appointment> doctorAppointments = doctor.getAppointments();
+                if (!doctorAppointments.contains(appointment))
+                {
+                    doctorAppointments.add(appointment);
+                    doctor.setAppointments(doctorAppointments);
+                }
+            }
         }
     }
 

@@ -1,13 +1,15 @@
-package com.company.user;
+package com.company.user.doctor;
 
 import com.company.appointment.Appointment;
+import com.company.user.user.User;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Doctor extends User {
+public class Doctor extends User{
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
@@ -19,8 +21,21 @@ public class Doctor extends User {
 
     protected List<Appointment> appointments = new ArrayList<>();
 
-    public Doctor(String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, LocalDate dateOfEmployment, String phoneNumber, Double salary, String jobName, String specialization) {
-        super(username, email, password);
+    public Doctor()
+    {
+        super();
+        firstName = null;
+        lastName = null;
+        dateOfBirth = null;
+        dateOfEmployment = null;
+        phoneNumber = null;
+        salary = null;
+        jobName = null;
+        specialization = null;
+    }
+
+    public Doctor(Integer id, String username, String email, String password, String firstName, String lastName, LocalDate dateOfBirth, LocalDate dateOfEmployment, String phoneNumber, Double salary, String jobName, String specialization) {
+        super(id, username, email, password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;

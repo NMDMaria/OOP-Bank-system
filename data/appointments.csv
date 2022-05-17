@@ -1,0 +1,19 @@
+id,doctor,patient,date,status,specialization,medicalprocedure
+1,4,6,20-12-2019 10:30,DONE,General,1
+2,4,6,12-02-2020 12:45,DONE,General,2
+3,10,5,30-09-2021 14:30,DONE,Family,3
+4,10,7,25-10-2021 12:30,DONE,Family,4
+5,10,7,30-10-2021 17:15,DONE,Family,5
+6,9,5,18-04-2022 08:00,DONE,Pneumology,6
+7,9,1,17-04-2022 08:00,DONE,Pneumology,7
+8,9,8,30-06-2021 11:45,DONE,Pneumology,8
+9,null,5,17-04-2022 12:00,CANCELLED,Family,null
+10,null,6,25-04-2022 16:30,CANCELLED,Family,null
+11,null,5,30-04-2022 12:00,WAITING,Family,9
+12,null,1,30-04-2022 13:15,WAITING,General,10
+13,null,1,01-05-2022 14:00,WAITING,Pneumology,11
+14,2,1,15-04-2022 12:00,DONE,General,12
+15,3,5,10-03-2022 15:00,DONE,General,13
+16,2,8,09-03-2022 10:00,DONE,General,14
+17,10,6,18-04-2022 13:00,DONE,General,15
+18,null,8,30-04-2022 12:00,WAITING,general,16
