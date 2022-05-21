@@ -1,6 +1,7 @@
 package com.company.procedure.medicalprocedure;
 
 import java.time.*;
+import java.util.Objects;
 
 public class MedicalProcedure {
     private Integer id;
@@ -65,6 +66,19 @@ public class MedicalProcedure {
 
     public void setAppointmentId(Integer appointmentId) {
         this.appointmentId = appointmentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MedicalProcedure procedure = (MedicalProcedure) o;
+        return Objects.equals(id, procedure.id) && Objects.equals(appointmentId, procedure.appointmentId) && Objects.equals(startTime, procedure.startTime) && Objects.equals(duration, procedure.duration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, appointmentId, startTime, duration);
     }
 
     @Override

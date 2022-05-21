@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Appointment {
     private Integer id;
     private Integer doctor = null;
-    private Integer patient = null;
+    private Integer patient;
     private LocalDateTime date;
     private Status status;
     private String specialization;
@@ -119,7 +119,7 @@ public class Appointment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(date, that.date) && status == that.status && Objects.equals(specialization, that.specialization) && Objects.equals(medicalProcedure, that.medicalProcedure);
+        return Objects.equals(id, that.id) && Objects.equals(doctor, that.doctor) && Objects.equals(patient, that.patient) && Objects.equals(date, that.date) && status == that.status && Objects.equals(specialization, that.specialization);
     }
 
     @Override

@@ -243,6 +243,7 @@ public class DoctorService {
         String answer = sc.nextLine();
         if (answer.equals("Y") || answer.equals("y")) {
             Affliction diagnose = this.diagnose(appointment.getDate(), appointment.getPatient());
+            diagnose.setCheckup(medicalProcedure.getId());
             ((Checkup) medicalProcedure).setDiagnosis(diagnose);
             System.out.println("Add treatments? (Y/N)");
             answer = sc.nextLine();
@@ -262,7 +263,6 @@ public class DoctorService {
         } else {
             hours = Integer.parseInt(aux);
             minutes = Integer.parseInt(sc.nextLine());
-            System.out.println(hours);
             medicalProcedure.setDuration(LocalTime.of(hours, minutes));
         }
 
@@ -322,7 +322,7 @@ public class DoctorService {
                 severity = Severity.INSIGNIFICANT; break;
         }
 
-        return new Affliction(AfflictionService.afflictionKeyGenerator.nextKey(), patientId,name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
+        return new Affliction(AfflictionService.afflictionKeyGenerator.nextKey(), patientId, name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
     }
 
     private List<Treatment> planTreatment(Affliction diagnosis, Checkup checkup)
