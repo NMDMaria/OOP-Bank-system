@@ -71,7 +71,9 @@ public class MedicalProcedure {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || (getClass() != o.getClass() && !(o instanceof MedicalProcedure))) {
+            return false;
+        }
         MedicalProcedure procedure = (MedicalProcedure) o;
         return Objects.equals(id, procedure.id) && Objects.equals(appointmentId, procedure.appointmentId) && Objects.equals(startTime, procedure.startTime) && Objects.equals(duration, procedure.duration);
     }

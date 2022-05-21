@@ -1,5 +1,7 @@
 package com.company.database;
 
+import com.company.audit.AuditService;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ public class DatabaseConfiguration {
     public static Connection getDatabaseConnection() {
         try {
             if (databaseConnection == null) {
+                AuditService.getInstance().write("create_connection");
                 databaseConnection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             }
         } catch (SQLException e) {
@@ -28,6 +31,7 @@ public class DatabaseConfiguration {
     public static void closeDatabaseConnection() {
         try {
             if (databaseConnection != null && !databaseConnection.isClosed()) {
+                AuditService.getInstance().write("close_connection");
                 databaseConnection.close();
             }
         } catch (SQLException e) {

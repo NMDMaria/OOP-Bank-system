@@ -97,6 +97,7 @@ public class App {
     private void initializeFromDatabase()
     {
         try {
+            audit.write("init_tables_fetch_data");
             initTables();
             List<String> orderInit = Arrays.asList("patients", "doctors", "afflictions", "checkups", "surgeries", "treatments", "appointments");
 
@@ -183,6 +184,7 @@ public class App {
         // and do other initializing like populating lists.
         // Also, the key generator is updated to match the last id found.
         try {
+            audit.write("init_from_csv");
             List<String> orderInit = Arrays.asList("patients", "doctors", "afflictions", "checkups", "surgeries", "treatments","appointments");
 
             File directory = new File(directoryPath);
@@ -283,6 +285,7 @@ public class App {
 
     private void saveToDatabase()
     {
+        audit.write("save_to_database");
         initTables();
         // Saving users
         List<User> memorizedUsers = UserRepository.getInstance().selectAll();
@@ -291,6 +294,7 @@ public class App {
             if (UserRepository.getInstance().getUserById(user.getId()) == null)
             {
                 // User was just created, need to add it.
+                audit.write("insert_user");
                 UserRepository.getInstance().insert(user);
                 nrNewUsers += 1;
             }
@@ -301,6 +305,7 @@ public class App {
             {
                 if (users.stream().noneMatch(x->x.getId() == user.getId()))
                 {
+                    audit.write("delete_user");
                     UserRepository.getInstance().delete(user.getId());
                 }
             }
@@ -311,6 +316,7 @@ public class App {
         for (Patient patient: patients) {
             if (memorizedPatients.stream().noneMatch(x->x.getId() == patient.getId()))
             {
+                audit.write("insert_patient");
                 PatientRepository.getInstance().insert(patient);
             }
         }
@@ -319,6 +325,7 @@ public class App {
         for (Doctor doctor: doctors) {
             if (memorizedDoctors.stream().noneMatch(x->x.getId() == doctor.getId()))
             {
+                audit.write("insert_doctor");
                 DoctorRepository.getInstance().insert(doctor);
             }
         }
@@ -327,10 +334,12 @@ public class App {
         for (Appointment appointment: appointments) {
             if (memorizedAppointments.stream().noneMatch(x->x.getId() == appointment.getId()))
             {
+                audit.write("insert_appointment");
                 AppointmentRepository.getInstance().insert(appointment);
             }
-            else if (memorizedAppointments.stream().filter(x->x.getId() == appointment.getId()).findFirst().orElse(null) != appointment)
+            else if (!memorizedAppointments.stream().filter(x->x.getId() == appointment.getId()).findFirst().orElse(null).equals(appointment))
             {
+                audit.write("update_appointment");
                 AppointmentRepository.getInstance().update(appointment);
             }
         }
@@ -339,6 +348,7 @@ public class App {
         for (Affliction affliction:afflictions) {
             if (memorizedAfflictions.stream().noneMatch(x->x.getId() == affliction.getId()))
             {
+                audit.write("insert_affliction");
                 AfflictionRepository.getInstance().insert(affliction);
             }
         }
@@ -346,9 +356,11 @@ public class App {
         List<MedicalProcedure> memorizedProcedures = MedicalProcedureRepository.getInstance().selectAll();
         for (MedicalProcedure procedure: medicalProcedures) {
             if (memorizedProcedures.stream().noneMatch(x->x.getId() == procedure.getId())) {
+                audit.write("insert_procedure");
                 MedicalProcedureRepository.getInstance().insert(procedure);
             }
-            else if (memorizedProcedures.stream().filter(x->x.getId() == procedure.getId()).findFirst().orElse(null) != procedure){
+            else if (!memorizedProcedures.stream().filter(x->x.getId() == procedure.getId()).findFirst().orElse(null).equals(procedure)){
+                audit.write("update_procedure");
                 MedicalProcedureRepository.getInstance().update(procedure);
             }
         }
@@ -356,9 +368,11 @@ public class App {
         List<Checkup> memorizedCheckups = CheckupRepository.getInstance().selectAll();
         for (Checkup checkup: checkups) {
             if (memorizedCheckups.stream().noneMatch(x->x.getId() == checkup.getId())) {
+                audit.write("insert_checkup");
                 CheckupRepository.getInstance().insert(checkup);
             }
-            else if (memorizedCheckups.stream().filter(x->x.getId() == checkup.getId()).findFirst().orElse(null) != checkup) {
+            else if (!memorizedCheckups.stream().filter(x->x.getId() == checkup.getId()).findFirst().orElse(null).equals(checkup)) {
+                audit.write("update_checkup");
                 CheckupRepository.getInstance().update(checkup);
             }
         }
@@ -366,9 +380,11 @@ public class App {
         List<Surgery> memorizedSurgeries = SurgeryRepository.getInstance().selectAll();
         for (Surgery surgery: surgeries) {
             if (memorizedSurgeries.stream().noneMatch(x->x.getId() == surgery.getId())) {
+                audit.write("insert_surgery");
                 SurgeryRepository.getInstance().insert(surgery);
             }
-            else if (memorizedSurgeries.stream().filter(x->x.getId() == surgery.getId()).findFirst().orElse(null) != surgery) {
+            else if (!memorizedSurgeries.stream().filter(x->x.getId() == surgery.getId()).findFirst().orElse(null).equals(surgery)) {
+                audit.write("update_surgery");
                 SurgeryRepository.getInstance().update(surgery);
             }
         }
@@ -376,6 +392,7 @@ public class App {
         List<Treatment> memorizedTreatments = TreatmentRepository.getInstance().selectAll();
         for (Treatment treatment: treatments) {
             if (memorizedTreatments.stream().noneMatch(x->x.getId() == treatment.getId())) {
+                audit.write("insert_treatment");
                 TreatmentRepository.getInstance().insert(treatment);
             }
         }
@@ -384,6 +401,7 @@ public class App {
     public void writeData(String directoryPath)
     {
         // Writes all the data using CSV writer
+        audit.write("save_to_csv");
         CSVWriter<Patient> patientCSVWriter = new CSVWriter<>();
         patientCSVWriter.toCSV(directoryPath, patients, Patient.class, true);
         CSVWriter<Doctor> doctorCSVWriter = new CSVWriter<>();

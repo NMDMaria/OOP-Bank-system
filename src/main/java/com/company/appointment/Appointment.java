@@ -5,6 +5,7 @@ import com.company.procedure.medicalprocedure.MedicalProcedure;
 import com.company.user.patient.Patient;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Appointment {
@@ -119,7 +120,9 @@ public class Appointment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(id, that.id) && Objects.equals(doctor, that.doctor) && Objects.equals(patient, that.patient) && Objects.equals(date, that.date) && status == that.status && Objects.equals(specialization, that.specialization);
+        return Objects.equals(id, that.id) && Objects.equals(doctor, that.doctor) && Objects.equals(patient, that.patient)
+                && Objects.equals(date, that.date)
+                && status == that.status && Objects.equals(specialization, that.specialization);
     }
 
     @Override
