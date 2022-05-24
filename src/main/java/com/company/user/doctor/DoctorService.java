@@ -200,7 +200,7 @@ public class DoctorService {
             String aux = sc.nextLine();
             int hours;
             int minutes;
-            if (aux.equals("\n")) {
+            if (aux.equals("")) {
                 hours = LocalTime.now().getHour();
                 minutes = LocalTime.now().getMinute();
             } else {
@@ -258,7 +258,7 @@ public class DoctorService {
         System.out.println("Checkup duration (first hours, then minutes, leave empty for default): ");
         String aux = sc.nextLine();
         int hours, minutes;
-        if (aux.equals("\n")) {
+        if (aux.equals("")) {
             medicalProcedure.setDuration(LocalTime.of(0, 20));
         } else {
             hours = Integer.parseInt(aux);

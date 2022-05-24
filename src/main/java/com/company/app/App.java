@@ -289,6 +289,7 @@ public class App {
         initTables();
         // Saving users
         List<User> memorizedUsers = UserRepository.getInstance().selectAll();
+        List<Integer> deletedUserId = new ArrayList<>();
         int nrNewUsers = 0;
         for (User user: users) {
             if (UserRepository.getInstance().getUserById(user.getId()) == null)
@@ -306,6 +307,7 @@ public class App {
                 if (users.stream().noneMatch(x->x.getId() == user.getId()))
                 {
                     audit.write("delete_user");
+                    deletedUserId.add(user.getId());
                     UserRepository.getInstance().delete(user.getId());
                 }
             }
@@ -316,6 +318,10 @@ public class App {
         for (Patient patient: patients) {
             if (memorizedPatients.stream().noneMatch(x->x.getId() == patient.getId()))
             {
+                // Need to check to see if the user didn't get deleted
+                if (deletedUserId.stream().filter(x-> x == patient.getId()).count() != 0)
+                    // A user with this id was previously deleted, so we won't reinsert it in the database
+                    continue;
                 audit.write("insert_patient");
                 PatientRepository.getInstance().insert(patient);
             }
@@ -325,6 +331,10 @@ public class App {
         for (Doctor doctor: doctors) {
             if (memorizedDoctors.stream().noneMatch(x->x.getId() == doctor.getId()))
             {
+                // Need to check to see if the user didn't get deleted
+                if (deletedUserId.stream().filter(x-> x == doctor.getId()).count() != 0)
+                    // An user with this id was previously deleted, so we won't reinsert it in the database
+                    continue;
                 audit.write("insert_doctor");
                 DoctorRepository.getInstance().insert(doctor);
             }
@@ -359,9 +369,16 @@ public class App {
                 audit.write("insert_procedure");
                 MedicalProcedureRepository.getInstance().insert(procedure);
             }
-            else if (!memorizedProcedures.stream().filter(x->x.getId() == procedure.getId()).findFirst().orElse(null).equals(procedure)){
-                audit.write("update_procedure");
-                MedicalProcedureRepository.getInstance().update(procedure);
+            else {
+                // Because objects in list are an upcast to the class, can't use normal equals.
+                MedicalProcedure procedureInDatabase = memorizedProcedures.stream().filter(x->x.getId() == procedure.getId()).findFirst().orElse(null);
+                if (procedureInDatabase == null)
+                    continue;
+                if (!procedureInDatabase.getAppointmentId().equals(procedure.getAppointmentId()) ||
+                    !procedureInDatabase.getStartTime().equals(procedure.getStartTime()) || !procedureInDatabase.getDuration().equals(procedure.getDuration())) {
+                    audit.write("update_procedure");
+                    MedicalProcedureRepository.getInstance().update(procedure);
+                }
             }
         }
 
@@ -466,6 +483,8 @@ public class App {
             {
                 case "1":{
                     User newUser = userService.readUser(scanner);
+                    if (newUser == null)
+                        break;
                     if (newUser instanceof Patient) {
                         audit.write("read_patient");
                         patients.add((Patient) newUser);

@@ -86,11 +86,15 @@ public class UserService{
                 case 0:
                     scanner.nextLine();
                     newUser = PatientService.getInstance().readPatient(username, email, password, scanner);
+                    if (newUser == null)
+                        return null;
                     this.addUser(newUser);
                     return newUser;
                 case 1:
                     scanner.nextLine();
                     newUser = DoctorService.getInstance().readDoctor(username, email, password, scanner);
+                    if (newUser == null)
+                        return null;
                     this.addUser(newUser);
                     return newUser;
                 default:
