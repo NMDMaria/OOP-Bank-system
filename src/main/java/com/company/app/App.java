@@ -439,13 +439,13 @@ public class App {
     public void menu()
     {
         this.initialize();
-        System.out.println("Please choose an initialization method: ");
+        System.out.println("Please choose a type of application: ");
         String option;
         Scanner scanner = new Scanner(System.in);
 
         do {
-            System.out.println("1. From folder with CSV files");
-            System.out.println("2. From PAO database");
+            System.out.println("1. CSV files based application");
+            System.out.println("2. PAO database application");
             System.out.println("0. Exit");
 
             option = scanner.nextLine();
@@ -488,9 +488,17 @@ public class App {
                     if (newUser instanceof Patient) {
                         audit.write("read_patient");
                         patients.add((Patient) newUser);
+                        if (this.isDatabaseApp()){
+                            UserRepository.getInstance().insert(newUser);
+                            PatientRepository.getInstance().insert((Patient) newUser);
+                        }
                     } else if (newUser instanceof Doctor){
                         audit.write("read_doctor");
                         doctors.add((Doctor) newUser);
+                        if (this.isDatabaseApp()){
+                            UserRepository.getInstance().insert(newUser);
+                            DoctorRepository.getInstance().insert((Doctor) newUser);
+                        }
                     }
                     break;
                 }
@@ -517,11 +525,15 @@ public class App {
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y")) {
-                                    if (user instanceof Patient)
+                                    if (user instanceof Patient) {
                                         patients.remove(user);
-                                    else if (user instanceof Doctor)
+                                    }
+                                    else if (user instanceof Doctor) {
                                         doctors.remove(user);
+                                    }
                                     userService.deleteUser(user);
+                                    if (this.isDatabaseApp())
+                                        UserRepository.getInstance().delete(user.getId());
 
                                     audit.write("delete_user");
                                 }
@@ -539,7 +551,15 @@ public class App {
                                 System.out.println("Delete user? (Y/N)");
                                 String deleteQuestion = scanner.nextLine();
                                 if (deleteQuestion.equals("Y") || deleteQuestion.equals("y")) {
+                                    if (user instanceof Patient) {
+                                        patients.remove(user);
+                                    }
+                                    else if (user instanceof Doctor) {
+                                        doctors.remove(user);
+                                    }
                                     userService.deleteUser(user);
+                                    if (this.isDatabaseApp())
+                                        UserRepository.getInstance().delete(user.getId());
                                     audit.write("delete_user");
                                 }
                             }
@@ -553,12 +573,12 @@ public class App {
             }
         }while (!option.equals("0"));
 
-        System.out.println("Please choose a method of saving: ");
+        System.out.println("Do you want to upload your data anywhere? ");
 
         do {
             System.out.println("1. To CSV files in a folder");
-            System.out.println("2. To database");
-            System.out.println("0. Exit");
+            System.out.println("2. To database PAO (if database application was selected data is already saved)");
+            System.out.println("0. None");
 
             option = scanner.nextLine();
 
@@ -651,5 +671,21 @@ public class App {
 
     public void setSurgeries(List<Surgery> surgeries) {
         this.surgeries = surgeries;
+    }
+
+    public boolean isCsvApp() {
+        return csvApp;
+    }
+
+    public void setCsvApp(boolean csvApp) {
+        this.csvApp = csvApp;
+    }
+
+    public boolean isDatabaseApp() {
+        return databaseApp;
+    }
+
+    public void setDatabaseApp(boolean databaseApp) {
+        this.databaseApp = databaseApp;
     }
 }
