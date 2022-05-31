@@ -14,6 +14,17 @@ public class Affliction {
     private Severity severity;
     private Boolean cured = Boolean.FALSE;
 
+    public Affliction(Integer id, Integer patientId, String name, Integer checkup, LocalDate startDate, LocalDate endDate, Severity severity, Boolean cured) {
+        this.id = id;
+        this.patientId = patientId;
+        this.name = name;
+        this.checkup = checkup;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.severity = severity;
+        this.cured = cured;
+    }
+
     public Affliction()
     {
         id = null;

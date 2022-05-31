@@ -4,6 +4,7 @@ import com.company.procedure.Severity;
 import com.company.procedure.medicalprocedure.MedicalProcedure;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Surgery extends MedicalProcedure {
     private String type;
@@ -62,6 +63,20 @@ public class Surgery extends MedicalProcedure {
 
     public void setComplications(String complications) {
         this.complications = complications;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Surgery surgery = (Surgery) o;
+        return Objects.equals(type, surgery.type) && risk == surgery.risk && Objects.equals(complications, surgery.complications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, risk, complications);
     }
 
     @Override

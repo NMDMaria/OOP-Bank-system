@@ -2,15 +2,20 @@ package com.company.user.doctor;
 
 import com.company.app.App;
 import com.company.appointment.Appointment;
+import com.company.appointment.AppointmentRepository;
 import com.company.appointment.Status;
 import com.company.audit.AuditService;
 import com.company.procedure.*;
 import com.company.procedure.affliction.Affliction;
+import com.company.procedure.affliction.AfflictionRepository;
 import com.company.procedure.affliction.AfflictionService;
 import com.company.procedure.checkup.Checkup;
+import com.company.procedure.checkup.CheckupRepository;
 import com.company.procedure.medicalprocedure.MedicalProcedure;
+import com.company.procedure.medicalprocedure.MedicalProcedureRepository;
 import com.company.procedure.surgery.Surgery;
 import com.company.procedure.treatment.Treatment;
+import com.company.procedure.treatment.TreatmentRepository;
 import com.company.procedure.treatment.TreatmentService;
 import com.company.user.user.UserService;
 
@@ -200,7 +205,7 @@ public class DoctorService {
             String aux = sc.nextLine();
             int hours;
             int minutes;
-            if (aux.equals("\n")) {
+            if (aux.equals("")) {
                 hours = LocalTime.now().getHour();
                 minutes = LocalTime.now().getMinute();
             } else {
@@ -210,6 +215,8 @@ public class DoctorService {
             MedicalProcedure medicalProcedure = appointment.getMedicalProcedure();
             medicalProcedure.setStartTime(LocalTime.of(hours, minutes));
 
+            if (App.getInstance().isDatabaseApp())
+                MedicalProcedureRepository.getInstance().update(medicalProcedure);
 
             if (medicalProcedure instanceof Checkup) {
                 handleCheckup(appointment, medicalProcedure, sc);
@@ -227,6 +234,10 @@ public class DoctorService {
             appointment.setStatus(Status.DONE);
             appointment.setDoctor(doctor.getId());
 
+            if (App.getInstance().isDatabaseApp()) {
+                MedicalProcedureRepository.getInstance().update(medicalProcedure);
+                AppointmentRepository.getInstance().update(appointment);
+            }
             System.out.println("Appointment done.");
             System.out.println("----------------------------");
         }
@@ -243,7 +254,14 @@ public class DoctorService {
         String answer = sc.nextLine();
         if (answer.equals("Y") || answer.equals("y")) {
             Affliction diagnose = this.diagnose(appointment.getDate(), appointment.getPatient());
+            diagnose.setCheckup(medicalProcedure.getId());
             ((Checkup) medicalProcedure).setDiagnosis(diagnose);
+
+            if (App.getInstance().isDatabaseApp()) {
+                AfflictionRepository.getInstance().insert(diagnose);
+                CheckupRepository.getInstance().update((Checkup) medicalProcedure);
+            }
+
             System.out.println("Add treatments? (Y/N)");
             answer = sc.nextLine();
             if (answer.equals("Y") || answer.equals("y")) {
@@ -257,12 +275,11 @@ public class DoctorService {
         System.out.println("Checkup duration (first hours, then minutes, leave empty for default): ");
         String aux = sc.nextLine();
         int hours, minutes;
-        if (aux.equals("\n")) {
+        if (aux.equals("")) {
             medicalProcedure.setDuration(LocalTime.of(0, 20));
         } else {
             hours = Integer.parseInt(aux);
             minutes = Integer.parseInt(sc.nextLine());
-            System.out.println(hours);
             medicalProcedure.setDuration(LocalTime.of(hours, minutes));
         }
 
@@ -322,7 +339,7 @@ public class DoctorService {
                 severity = Severity.INSIGNIFICANT; break;
         }
 
-        return new Affliction(AfflictionService.afflictionKeyGenerator.nextKey(), patientId,name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
+        return new Affliction(AfflictionService.afflictionKeyGenerator.nextKey(), patientId, name, LocalDate.of(startDate.getYear(), startDate.getMonthValue(), startDate.getDayOfMonth()), severity);
     }
 
     private List<Treatment> planTreatment(Affliction diagnosis, Checkup checkup)
@@ -347,6 +364,9 @@ public class DoctorService {
 
                 Treatment treatment = new Treatment(TreatmentService.treatmentKeyGenerator.nextKey(), checkup.getId(), drug, numberOfDays, units);
                 treatments.add(treatment);
+                if (App.getInstance().isDatabaseApp())
+                    TreatmentRepository.getInstance().insert(treatment);
+
                 System.out.println("Add treatment (Y/N)");
                 answer = sc.nextLine();
             } while (answer.equals("Y") || answer.equals("y"));

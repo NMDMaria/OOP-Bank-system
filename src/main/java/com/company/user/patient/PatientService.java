@@ -2,6 +2,7 @@ package com.company.user.patient;
 
 import com.company.app.App;
 import com.company.appointment.Appointment;
+import com.company.appointment.AppointmentRepository;
 import com.company.appointment.AppointmentService;
 import com.company.audit.AuditService;
 import com.company.procedure.affliction.Affliction;
@@ -54,8 +55,11 @@ public class PatientService{
                 case "1": {
                     try {
                         Appointment appointment = this.makeAppointment(patient, medicalProcedures, checkups, surgeries, scanner);
-                        if (appointment != null)
+                        if (appointment != null) {
                             appointments.add(appointment);
+                            if (App.getInstance().isDatabaseApp())
+                                AppointmentRepository.getInstance().insert(appointment);
+                        }
                         AuditService.getInstance().write("make_appointment");
                     } catch(Exception e) {
                         System.out.println(e.getMessage());
@@ -306,6 +310,8 @@ public class PatientService{
             List<Appointment> appointments = patient.getAppointments();
             Appointment appointment = appointments.get(index);
             appointment.setStatus(Status.CANCELLED);
+            if (App.getInstance().isDatabaseApp())
+                AppointmentRepository.getInstance().update(appointment);
             patient.setAppointments(appointments);
         }
         else throw new Exception("No appointment at given date.");
@@ -321,6 +327,8 @@ public class PatientService{
             if (checkIndex == -1 || appointments.get(index).getStatus() == Status.CANCELLED) {
                 Appointment appointment = appointments.get(index);
                 appointment.setDate(newDate);
+                if (App.getInstance().isDatabaseApp())
+                    AppointmentRepository.getInstance().update(appointment);
                 System.out.println("Appointment moved");
                 patient.setAppointments(appointments);
             }

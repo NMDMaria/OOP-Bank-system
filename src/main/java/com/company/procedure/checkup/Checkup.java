@@ -7,6 +7,7 @@ import com.company.procedure.medicalprocedure.MedicalProcedure;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Checkup extends MedicalProcedure {
     private Affliction diagnosis;
@@ -63,6 +64,20 @@ public class Checkup extends MedicalProcedure {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Checkup checkup = (Checkup) o;
+        return Objects.equals(motive, checkup.motive) && Objects.equals(observations, checkup.observations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), motive, observations);
     }
 
     @Override
